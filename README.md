@@ -46,7 +46,7 @@ When build finished then run the following command to add the new package box to
 vagrant box add --name "Yohnah/Docker" /tmp/packer-build/output/boxes/docker/virtualbox/package.box
 ~~~
 
-### Init vagrat box
+### Init vagrant box
 
 Once all requirements are met, the following command must be run:
 
