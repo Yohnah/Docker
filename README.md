@@ -1,6 +1,6 @@
 # Docker
 
-Packer code to create Vagrant Box as Docker Desktop alternative.
+Packer code to create a Vagrant Box as Docker Desktop alternative.
 
 ## Requirements
 
