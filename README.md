@@ -72,13 +72,13 @@ or
 $ vagrant up --provider <hypervisor>
 ~~~
 
-When box is running it is possible ssh onto box
+When box is running, ssh is possible
 
 ~~~
 $ vagrant ssh
 ~~~
 
-And perform any docker actions using the included docker client within vagrant box.
+And perform any docker actions using the included docker client within the vagrant box.
 
 
 ## Run Docker on host
