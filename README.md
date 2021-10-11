@@ -72,7 +72,7 @@ or
 $ vagrant up --provider <hypervisor>
 ~~~
 
-After box is running it is possible ssh onto box
+When box is running it is possible ssh onto box
 
 ~~~
 $ vagrant ssh
