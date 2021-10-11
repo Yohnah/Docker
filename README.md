@@ -2,6 +2,10 @@
 
 Packer code to create a Vagrant Box as Docker Desktop alternative.
 
+
+Vagrant Cloud repository: [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+
+
 ## Requirements
 
 ### Software
