@@ -53,6 +53,13 @@ $ vagrant init Yohnah/Docker
 
 - Raise the box up (and download the vagrant box from Vagrant Cloud if not build such as above)
 
+---
+***NOTE***
+
+The box can be found at [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+
+---
+
 ~~~
 $ vagrant up
 
