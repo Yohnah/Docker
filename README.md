@@ -146,4 +146,4 @@ end
 ~~~
 
 
-Further information read the vagrant docs about [Synced folders](vagrantup.com/docs/synced-folders)
+Further information read the vagrant docs about [Synced folders](https://www.vagrantup.com/docs/synced-folders)
