@@ -40,6 +40,7 @@ build {
             post-processor "vagrant-cloud" {
             box_tag = "Yohnah/Docker"
             version="20.10.9"
+            version_description="Further information: https://docs.docker.com/engine/release-notes/"
         }
     }
 

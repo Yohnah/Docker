@@ -61,13 +61,13 @@ or
 $ vagrant up --provider <hypervisor>
 ~~~
 
-After box is running, it is possible ssh to vagrant box environment.
+After box is running it is possible ssh onto box
 
 ~~~
 $ vagrant ssh
 ~~~
 
-And perform any ocker actions using the installed docker client within vagrant box.
+And perform any docker actions using the included docker client within vagrant box.
 
 
 ## Run Docker on host
