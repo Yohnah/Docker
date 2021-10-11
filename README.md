@@ -42,8 +42,6 @@ When build finished then run the following command to add the new package box to
 vagrant box add --name "Yohnah/Docker" /tmp/packer-build/output/boxes/docker/virtualbox/package.box
 ~~~
 
-[Init]: www.google.es
-
 ### Init vagrat box
 
 Once all requirements are met, the following command must be run:
@@ -53,7 +51,7 @@ Once all requirements are met, the following command must be run:
 $ vagrant init Yohnah/Docker
 ~~~
 
-- Download or raise the box up
+- Raise the box up (and download the vagrant box from Vagrant Cloud if not build such as above)
 
 ~~~
 $ vagrant up

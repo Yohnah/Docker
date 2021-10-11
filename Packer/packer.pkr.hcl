@@ -36,4 +36,11 @@ build {
         ]
     }
 
+    post-processors {
+            post-processor "vagrant-cloud" {
+            box_tag = "Yohnah/Docker"
+            version="20.10.9"
+        }
+    }
+
 }
