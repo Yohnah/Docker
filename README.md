@@ -1,6 +1,6 @@
 # Docker
 
-Packer code to create a Vagrant Box as Docker Desktop alternative.
+Packer code to create a Vagrant Box as a Docker Desktop alternative.
 
 This box is built using Alpine Linux as image base from Yohnah/Alpine box at Vagrant Cloud, because the resulting package.box size is very tiny, including the docker engine installed in (192Mb aprox.)
 
