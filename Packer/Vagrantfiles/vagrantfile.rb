@@ -50,6 +50,8 @@ Vagrant.configure(2) do |config|
 
   config.vm.network "forwarded_port", guest: 2375, host: 2375, host_ip: "127.0.0.1", auto_correct: true
 
+  config.vm.network "private_network", type: "dhcp"
+
   config.vm.provider "virtualbox" do |vb, override|
     vb.memory = 2048
     vb.cpus = 2

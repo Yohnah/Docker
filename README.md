@@ -146,5 +146,28 @@ Vagrant.configure("2") do |config|
 end
 ~~~
 
-
 Further information read the vagrant docs about [Synced folders](https://www.vagrantup.com/docs/synced-folders)
+
+## Exposing port services
+
+One of requirements to work with Docker is get access to exposed docker services running on guest from host device.
+
+To reach it out, the package box has already configured the following Vagrantfile command within vagrant configure section:
+
+~~~
+Vagrant.configure("2") do |config|
+  # other config here
+
+  config.vm.network "private_network", type: "dhcp"
+  
+end
+~~~
+
+As see, the private_network is configure to get an auto assigned IP address provided by hypervisor. To know what IP address was set, just the following vagrant command may be run:
+
+~~~
+$ vagrant ssh -- get-ips.sh
+~~~
+
+Anyway, if other IP addresses shoud be set, it can be configure using the [private_network](https://www.vagrantup.com/docs/networking/private_network) or [public_network](https://www.vagrantup.com/docs/networking/public_network) vagrant config attributes within Vagrantfile manifest.
+

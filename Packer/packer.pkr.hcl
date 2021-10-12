@@ -28,6 +28,11 @@ build {
         destination = "/tmp/motd"
     }
 
+    provisioner "file"{
+        source = "${path.root}/Provision/Files/get-ips.sh"
+        destination = "/tmp/get-ips.sh"
+    }
+
     provisioner "shell" {
         scripts = [
             "${path.root}/Provision/system.sh",
