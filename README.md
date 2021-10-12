@@ -148,7 +148,7 @@ end
 
 Further information read the vagrant docs about [Synced folders](https://www.vagrantup.com/docs/synced-folders)
 
-## Exposing port services
+## Exposing services ports
 
 One of requirements to work with Docker is get access to exposed docker services running on guest from host device.
 
