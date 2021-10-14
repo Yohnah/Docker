@@ -184,7 +184,7 @@ PS C:\> $env:DOCKER_HOST = "tcp://127.0.0.1:2375/"
 
 ### Set context into docker client
 
-The alternative to use the docker binary client is configuring the [docker context command](https://docs.docker.com/engine/context/working-with-contexts/).
+The alternative is to configure the [docker context command](https://docs.docker.com/engine/context/working-with-contexts/).
 
 Example:
 
