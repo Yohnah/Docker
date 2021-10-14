@@ -92,7 +92,7 @@ ___
 ### Installing the client binary
 
 
-Install the docker binary client relative to your host operative system for downloading the compress file from Docker and uncompress it, such as (replace \<version-to-download\> for the appropiate version):
+Install the docker binary client relative to your host operative system for downloading the compress file from Docker and uncompress it, such as (replace \<version-to-download\> with the appropiate version):
 
 - Installing on Windows (on PowerShell)
 
