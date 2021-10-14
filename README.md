@@ -169,7 +169,7 @@ If the 2375/tcp is already in use, vagrant will set up a new port. Look at it on
 
 ---
 
-To configure the docker binary client you it can be set up the DOCKER_HOST environment variable:
+To configure the docker binary client it need to set up the DOCKER_HOST environment variable:
 
 ~~~
 On GNU/Linux or MacOs
