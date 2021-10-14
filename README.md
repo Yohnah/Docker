@@ -18,15 +18,49 @@ Vagrant Cloud repository: [https://app.vagrantup.com/Yohnah/boxes/Docker](https:
 
 * [Virtualbox](https://www.virtualbox.org/)
 
-
 ## How to use
+
+### Init vagrant box
+
+Once all requirements are met, the following command must be run:
+
+- Vagrant init to create the proper Vagrantfile in current directory
+
+~~~
+$ vagrant init Yohnah/Docker
+~~~
+
+- Raise the box up (and download the vagrant box from Vagrant Cloud if not build such as above)
+
+~~~
+$ vagrant up
+
+or
+
+$ vagrant up --provider <hypervisor>
+~~~
+
+---
+***NOTE***
+
+The box can be found at [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+
+---
+
+When box is running, ssh is possible
+
+~~~
+$ vagrant ssh
+~~~
+
+And perform any docker actions using the included docker client within the vagrant box.
 
 ### Building from source code
 
 ---
 ***NOTE***
 
-If you don't want to run the vagrant box from building the code and you want to use it from Vagrant Cloud, jump to next section ***Init vagrant box***
+If you don't want to build the vagrant package box, so ignore this step
 ___
 
 First of all, clone the repository to local workspace in your device:
@@ -35,7 +69,7 @@ First of all, clone the repository to local workspace in your device:
 $ git clone https://github.com/Yohnah/Docker.git
 ~~~
 
-Once cloned, dir to docker workspace and run the following command:
+Once cloned, dir to git workspace and run the following command:
 
 ~~~
 Docker/$ packer build -var "output_directory=/tmp" Packer/packer.pkr.hcl 
@@ -47,53 +81,93 @@ When build finished then run the following command to add the new package box to
 vagrant box add --name "Yohnah/Docker" /tmp/packer-build/output/boxes/docker/virtualbox/package.box
 ~~~
 
-### Init vagrant box
-
-Once all requirements are met, the following command must be run:
-
-- Vagrant init to create the proper Vagrantfile in current directory
-~~~
-$ vagrant init Yohnah/Docker
-~~~
-
-- Raise the box up (and download the vagrant box from Vagrant Cloud if not build such as above)
+## Run Docker client on host connecting to guest machine
 
 ---
 ***NOTE***
 
-The box can be found at [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+If you don't want to use the client docker binary on your host device, so ignore this section
+___
+
+### Installing the client binary
+
+
+Install the docker binary client relative to your host operative system for downloading the compress file from Docker and uncompress it, such as (replace \<version-to-download\> for the appropiate version):
+
+- Installing on Windows (on PowerShell)
+
+~~~
+PS > echo "Downloading docker client binary"
+PS > Invoke-WebRequest -Uri https://download.docker.com/win/static/stable/x86_64/docker-<version-to-download>.zip -OutFile "$env:TEMP/docker.zip"
+PS > echo "Create a directory for docker"
+PS > mkdir C:\Docker
+PS > echo "Uncompress onto docker directory"
+PS > Expand-Archive -LiteralPath "$env:TEMP/docker.zip" -DestinationPath "C:\Docker"
+PS > echo "Set PATH environment variable"
+PS > $env:Path += "C:\Docker"
+~~~
+
+So, run it as:
+
+~~~
+PS > docker.exe
+
+or (If not set the PATH environment variable)
+
+PS > C:\Docker\docker.exe
+~~~
+
+---
+***NOTE***
+
+In order to permanent set the PATH variable and not be ephimeral, read the Microsoft documentation on Section "[Saving changes to environment variables](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-7.1#saving-changes-to-environment-variables)"
 
 ---
 
-~~~
-$ vagrant up
-
-or
-
-$ vagrant up --provider <hypervisor>
-~~~
-
-When box is running, ssh is possible
+- Installing on MacOS
 
 ~~~
-$ vagrant ssh
+$ echo "Downloading docker client binary"
+$ curl https://download.docker.com/mac/static/stable/x86_64/docker-<version-to-download>.tgz > /tmp/docker.tgz
+$ echo "Uncompress onto /usr/local"
+$ sudo tar -xzvf /tmp/docker.tgz -C /usr/local
+$ echo "Link docker client binary"
+$ sudo ln -sf /usr/local/docker/docker /usr/local/bin/docker
 ~~~
 
-And perform any docker actions using the included docker client within the vagrant box.
+So, run it as:
 
+~~~
+$ docker
+~~~
 
-## Run Docker on host
+- Installing on GNU/Linux
+
+~~~
+$ echo "Downloading docker client binary"
+$ curl https://download.docker.com/mac/static/stable/x86_64/docker-<version-to-download>.tgz > /tmp/docker.tgz
+$ echo "Uncompress onto /usr/local"
+$ sudo tar -xzvf /tmp/docker.tgz -C /usr/local
+$ echo "Link docker client binary"
+$ sudo ln -sf /usr/local/docker/docker /usr/local/bin/docker
+~~~
+
+So, run it as:
+
+~~~
+$ docker
+~~~
+
+### Set DOCKER_HOST environment variable
+
+---
+***NOTE***
 
 The vagrant box has exposed the 2375/tcp port (docker service port) and bind it at 127.0.0.1 loopback interface.
-
----
-***NOTE***
 
 If the 2375/tcp is already in use, vagrant will set up a new port. Look at it on vagrant boot verbose at boot time.
 
 ---
-
-### Set DOCKER_HOST environment variable
 
 So, it is possible to use docker binary client setting up the DOCKER_HOST environment variable:
 
