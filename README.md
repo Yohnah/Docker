@@ -190,6 +190,7 @@ Example:
 
 ~~~
 $ docker context create vagrant --description "Docker connection by vagrant box using 2375 port" --docker "host=tcp://127.0.0.1:2375/"
+$ docker context use vagrant
 ~~~
 
 
