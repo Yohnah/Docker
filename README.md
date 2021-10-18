@@ -81,7 +81,7 @@ ___
 ***Note:*** The Unix and Unix-like commands shown are the same for Windows OS, though knowing the commands ends with a .exe suffix (ex: docker.exe or vagrant.exe)
 ___
 
-The Yohnah/Docker vagrant box was developed to be a Docker Desktop alternative, furthe adding the portability feature included in Vagrant environment systems
+The Yohnah/Docker vagrant box was developed to be a Docker Desktop alternative, further adding the portability feature included in Vagrant environment systems
 
 Once the requirements are installed, in order to get Yohnah/Docker in your system or device, the following command must be run within a directory on your host:
 
