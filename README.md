@@ -103,7 +103,7 @@ or alternative:
 $ vagrant up --provider <hypervisor>
 ~~~
 
-Which <hypervisor> should be one of supported ones listed in requirements section. This last command will perform the following steps:
+Which \<hypervisor\> should be one of supported ones listed in requirements section. This last command will perform the following steps:
 
 1. Detect if the box was already downloaded, else, will download it from [Vagrant Cloud](https://app.vagrantup.com/Yohnah/boxes/Docker)
 2. Raise the virtual machine up, using the default hypervisor configured on host, or using the hypervisor set by the --provider tag
