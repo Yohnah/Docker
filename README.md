@@ -2,7 +2,7 @@ A Docker Desktop alternative on Vagrant
 ___
 Just run ***vagrant up*** command and enjoy it using docker client on the same host device where the command was run 
 
-The ***vagrant up*** raise a Debian virtual machine up and will ***auto-install and setup*** the docker client binaries on the same host by one-shot command
+The ***vagrant up*** raise a Debian virtual machine up and will ***auto-install and setup*** the docker client binaries on the same host by just running that one-shot command
 
 This box is built using Debian Linux by Yohnah/Debian as image base at Vagrant Cloud
 
