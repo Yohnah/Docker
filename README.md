@@ -83,7 +83,7 @@ ___
 
 The Yohnah/Docker vagrant box was developed to be a Docker Desktop alternative, further adding the portability feature included in Vagrant environment systems
 
-Once the requirements are installed, in order to get Yohnah/Docker in your system or device, the following command must be run within a directory on your host:
+Once the requirements are installed, in order to get Yohnah/Docker running on your system or device, the following command must be run within a directory on your host:
 
 ~~~
 $ vagrant init Yohnah/Docker
