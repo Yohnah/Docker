@@ -1,248 +1,206 @@
-# Docker
+A Docker Desktop alternative on Vagrant
+___
+Just run ***vagrant up*** command and enjoy it using docker client from the same host device where you run the ***vagrant up*** command. 
 
-Packer code to create a Vagrant Box as a Docker Desktop alternative.
+The ***vagrant up*** command will be in charge of installing the Docker environment by a hypervisor compatible and **auto install** the docker client binaries in your host, always considering the operative system running on host.
 
-This box is built using Alpine Linux as image base from Yohnah/Alpine box at Vagrant Cloud, because the resulting package.box size is very tiny, including the docker engine installed in (192Mb aprox.)
+This box is built using Debian Linux by Yohnah/Debian as image base at Vagrant Cloud
 
+___
+***Note:***
 Vagrant Cloud repository: [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+___
+
+- [Requirements](#requirements)
+  - [Compatible Operative Systems](#compatible-operative-systems)
+  - [Software](#software)
+  - [Hypervisor](#hypervisor)
+- [How to use](#how-to-use)
+  - [Short prompts](#short-prompts)
+  - [Long prompts](#long-prompts)
+- [Alternative use of docker on Yohnah/Docker box](#alternative-use-of-docker-on-yohnahdocker-box)
+- [Keep in mind](#keep-in-mind)
+  - [Running on MacOS](#running-on-macos)
+  - [Running on HyperV](#running-on-hyperv)
+  - [Running on VMWare_Desktop](#running-on-vmware_desktop)
+- [Building from sources](#building-from-sources)
+
+# Requirements
+
+## Compatible Operative Systems
+
+* Windows 10/11 amd
+
+## Software
+
+* Vagrant: <https://www.vagrantup.com/>
+
+## Hypervisor
+
+One of the following hypervisors must be installed:
+
+* Virtualbox: <https://www.virtualbox.org/>
+* Parallels: <https://www.parallels.com/> (only x86/amd64 compatible)
+* Hyper-V: <https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/>
 
 
-## Requirements
 
-### Software
+# How to use
 
-* [Vagrant](https://www.vagrantup.com/)
-* [Docker client binary](https://download.docker.com/) for Windows, MacOS or GNU/Linux if it's required run on host machine.
+## Short prompts
 
-### Hypervisors
+Run on Unix-Like and MacOs:
 
-* [Virtualbox](https://www.virtualbox.org/)
+~~~
+$ vagrant init Yohnah/Docker
+$ vagrant up #or vagrant up --provider <hypervisor>
+$ docker --help
+~~~
 
-## How to use
+On Windows PowerShell:
 
-### Init vagrant box
+~~~
+PS C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
+PS C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
+PS C:\Users\JohnDoe> docker.exe --help
+~~~
 
-Once all requirements are met, the following command must be run:
+On Windows CMD:
 
-- Vagrant init to create the proper Vagrantfile in current directory
+~~~
+C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
+C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
+C:\Users\JohnDoe> docker.exe --help
+~~~
+
+## Long prompts
+
+___
+***Note:*** The Unix and Unix-like commands shown are the same for Windows OS, though knowing the commands ends with a .exe suffix (ex: docker.exe or vagrant.exe)
+___
+
+The Yohnah/Docker vagrant box was developed to be a Docker Desktop alternative, furthe adding the portability feature included in Vagrant environment systems
+
+Once the requirements are installed, in order to get Yohnah/Docker in your system or device, the following command must be run within a directory on your host:
 
 ~~~
 $ vagrant init Yohnah/Docker
 ~~~
 
-- Raise the box up (and download the vagrant box from Vagrant Cloud if not build such as above)
+This command set a vagrant workspace in the directory where it was run.
+
+Next step the following command:
 
 ~~~
 $ vagrant up
+~~~
 
-or
+or alternative:
 
+~~~
 $ vagrant up --provider <hypervisor>
 ~~~
 
----
-***NOTE***
+Which <hypervisor> should be one of supported ones listed in requirements section. This last command will perform the following steps:
 
-The box can be found at [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+1. Detect if the box was already downloaded, else, will download it from [Vagrant Cloud](https://app.vagrantup.com/Yohnah/boxes/Docker)
+2. Raise the virtual machine up, using the default hypervisor configured on host, or using the hypervisor set by the --provider tag
 
----
-
-When box is running, ssh is possible
-
-~~~
-$ vagrant ssh
-~~~
-
-And perform any docker actions using the included docker client within the vagrant box.
-
-### Building from source code
-
----
-***NOTE***
-
-If you don't want to build the vagrant package box, so ignore this step
+___
+***Note:***
+For further information about how Vagrant works, please visit https://www.vagrantup.com/docs
 ___
 
-First of all, clone the repository to local workspace in your device:
+However, the Yohnah/Docker box include artifacts to install the docker client binaries into your host considering host OS, be it Windows, Mac or Linux
 
-~~~
-$ git clone https://github.com/Yohnah/Docker.git
-~~~
+After vagrant up is run, the box will trigger local actions onto the host to install and setup the docker client binaries, such as:
 
-Once cloned, dir to git workspace and run the following command:
-
-~~~
-Docker/$ packer build -var "output_directory=/tmp" Packer/packer.pkr.hcl 
-~~~
-
-When build finished then run the following command to add the new package box to Vagrant box workspace:
-
-~~~
-vagrant box add --name "Yohnah/Docker" /tmp/packer-build/output/boxes/docker/virtualbox/package.box
-~~~
-
-## Run Docker client on host connecting to guest machine
-
----
-***NOTE***
-
-If you don't want to use the client docker binary on your host device, so ignore this section
+1. Setup the PATH environment variable
+2. Copy all docker client binaries (same version as docker daemon installed into virtual machine) into your host machine
+3. Setup the DOCKER_HOST environment variable
+___
+***Note:***
+If a ***vagrant destroy*** command is performed, the box will also trigger the reset about actions listed above.
 ___
 
-### Installing the client binary
+So to just work with docker in your host device, it only needs to vagrant up the Yohnah/Docker box and run the docker client directly within a host terminal
 
 
-Install the docker binary client relative to your host operative system for downloading the compress file from Docker and uncompress it, such as (replace \<version-to-download\> with the appropiate version):
+# Alternative use of docker on Yohnah/Docker box
 
-- Installing on Windows (on PowerShell)
-
-~~~
-PS > echo "Downloading docker client binary"
-PS > Invoke-WebRequest -Uri https://download.docker.com/win/static/stable/x86_64/docker-<version-to-download>.zip -OutFile "$env:TEMP/docker.zip"
-PS > echo "Create a directory for docker"
-PS > mkdir C:\Docker
-PS > echo "Uncompress onto docker directory"
-PS > Expand-Archive -LiteralPath "$env:TEMP/docker.zip" -DestinationPath "C:\Docker"
-PS > echo "Set PATH environment variable"
-PS > $env:Path += "C:\Docker"
-~~~
-
-So, run it as:
+As alternative, it can be used by ssh the box as follows, after the vagrant up was run:
 
 ~~~
-PS > docker.exe
-
-or (If not set the PATH environment variable)
-
-PS > C:\Docker\docker.exe
+$ vagrant ssh #in the vagrant folder workspace
 ~~~
 
----
-***NOTE***
+In this manner, the docker client binaries is not neccessary to use
 
-In order to permanent set the PATH variable and not be ephimeral, read the Microsoft documentation on Section "[Saving changes to environment variables](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables?view=powershell-7.1#saving-changes-to-environment-variables)"
+___
+***Note:*** Set the INSTALL_DOCKER_CLIENT="NO" environment variable before running the ***vagrant up*** command and to avoid the docker client binaries installation and setup onto the host device.
+___
 
----
+# Keep in mind
 
-- Installing on MacOS
+## Running on MacOS
 
-~~~
-$ echo "Downloading docker client binary"
-$ curl https://download.docker.com/mac/static/stable/x86_64/docker-<version-to-download>.tgz > /tmp/docker.tgz
-$ echo "Uncompress onto /usr/local"
-$ sudo tar -xzvf /tmp/docker.tgz -C /usr/local
-$ echo "Link docker client binary"
-$ sudo ln -sf /usr/local/docker/docker /usr/local/bin/docker
-~~~
+The Yohnah/Docker box was built and test on MacOS Big Sur compatible with Vagrant. In spite of it, it should run on any x86/amd64 MacOS and not on new chips M1 Apple Silicon.
 
-So, run it as:
+The main reason about it, I had no the opportunity to get and M1 Apple Silicon to build the packer instructions for M1 chip. So, when I may get one, I'll alter the packer code to support M1. It requires to using an GNU/Linux SO with ARM arch support.
 
-~~~
-$ docker
-~~~
+Probably, the adaptation to M1 chip, will be performed on Parallels as hypervisor and not on VirtualBox. VirtualBox has no support for M1 chip yet at the time of writting this.
 
-- Installing on GNU/Linux
+## Running on HyperV
 
-~~~
-$ echo "Downloading docker client binary"
-$ curl https://download.docker.com/mac/static/stable/x86_64/docker-<version-to-download>.tgz > /tmp/docker.tgz
-$ echo "Uncompress onto /usr/local"
-$ sudo tar -xzvf /tmp/docker.tgz -C /usr/local
-$ echo "Link docker client binary"
-$ sudo ln -sf /usr/local/docker/docker /usr/local/bin/docker
-~~~
+Yohnah/Box runs fine on Windows machines using the HyperV hypervisor. However, it is important to know that Vagrant requires privileges to mount synced_folder (see [Vagrant docs](https://www.vagrantup.com/docs/providers/hyperv/usage) for more information)
 
-So, run it as:
+Be sure that your windows user account, in order for running the ***vagrant up*** command, has enough privileges to mount directories by SMB/CIFS protocol
 
-~~~
-$ docker
-~~~
+___
+***Note:*** It is very important to get the /vagrant directory mounted within the box when HyperV. The docker client binaries installation and setup only work if /vagrant directory is mounted. Otherwise, the docker client can only be used by ssh the guest machine.
+___
 
-### Set DOCKER_HOST environment variable
+## Running on VMWare_Desktop
 
----
-***NOTE***
+The vagrant provider ***VMWare_Desktop*** does not have candidate to work with Yohnah/Docker box yet. 
 
-The vagrant box has exposed the 2375/tcp port (docker service port) and bind it at 127.0.0.1 loopback interface.
+When the build was performed over VMWare_Desktop provider, an error exception between vmrun and vagrant was raised when the Vagrant Builder is used on Packer code
 
-If the 2375/tcp is already in use, vagrant will set up a new port. Look at it on vagrant boot verbose at boot time.
+I am attempting to build the Yohnah/Box to be supported on VMWare hypervisor (Fusion, Workstation and compatibles), but, as long as the incompatibility between vmrun and Vagrant is not fixed, vmware_destkop provider won't be candidate
 
----
+# Building from sources
 
-To configure the docker binary client it need to set up the DOCKER_HOST environment variable:
+Another option to use Yohnah/Box is building it from sources.
+
+To reach it out, first of all, the code must be cloned from the git repository on GitHub:
 
 ~~~
-On GNU/Linux or MacOs
-$ export DOCKER_HOST="tcp://127.0.0.1:2375/"
-
-On Windows CMD shell:
-C:\> setx DOCKER_HOST "tcp://127.0.0.1:2375/"
-
-On Powershell:
-PS C:\> $env:DOCKER_HOST = "tcp://127.0.0.1:2375/"
+$ git clone github.com/Yohnah/Docker.git
 ~~~
 
-### Set context into docker client
-
-The alternative is to configure the [docker context command](https://docs.docker.com/engine/context/working-with-contexts/).
-
-Example:
+And, inside of git workspace run the following command:
 
 ~~~
-$ docker context create vagrant --description "Docker connection by vagrant box using 2375 port" --docker "host=tcp://127.0.0.1:2375/"
-$ docker context use vagrant
+docker/$ packer build -var "output_directory=<path to base directory>" -var version="<Docker engine version>" Packer/packer.pkr.hcl
 ~~~
+___
+***Note:*** Comment all lines into packer code about ***vagrant-cloud*** post-processors if you don't want to upload the resulting box to vagrant cloud repository or set the VAGRANT_CLOUD_TOKEN with a vagrant cloud token instead (see [Packer docs about Vagrant Cloud post-processors](https://www.packer.io/docs/post-processors/vagrant/vagrant-cloud) for further information). On the contrary, you will get an error exception on run the command
+___
 
+Which ***output_directory*** variable set the base directory where built artifacts and the package box will be dumped, and the ***version*** variable set the Docker engine version to be installed into box (see [docker docs](https://docs.docker.com/engine/release-notes/) for futher information)
 
-## Mounting host directories on Vagrant box
-
-By default, the following directories are mounted:
-
-- USERPROFILE environment variable if host SO is Windows.
-- HOME environment variable if host SO is GNU/Linux
-- HOME environment variable if host SO is MacOs
-
----
-***NOTE***
-
-The default mounted directories are mounted as the environent variables on host was set.
-
-### Adding custom mount directories
-
-In order to mount custom host directories within the running vagrant box a [synced folder](https://www.vagrantup.com/docs/synced-folders) must be set in Vagrantfile at configure section.
-
-Example:
-~~~
-Vagrant.configure("2") do |config|
-  # other config here
-
-  config.vm.synced_folder "/path/on/host", "/path/on/vagrant/box"
-  
-end
-~~~
-
-Further information read the vagrant docs about [Synced folders](https://www.vagrantup.com/docs/synced-folders)
-
-## Exposing services ports
-
-One of requirements to work with Docker is get access to exposed docker services running on guest from host device.
-
-To reach it out, the package box has already configured the following Vagrantfile command within vagrant configure section:
+Once the package box is created, just import it into vagrant doing:
 
 ~~~
-Vagrant.configure("2") do |config|
-  # other config here
-
-  config.vm.network "private_network", type: "dhcp"
-  
-end
+$ vagrant box add --name "Yohnah/Docker" /path/to/package.box
 ~~~
 
-As see, the private_network is configure to get an auto assigned IP address provided by hypervisor. To know what IP address was set, just the following vagrant command may be run:
+/path/to/package.box is the path where the resulting box can be found
+
+Finally, confirm the package was imported on Vagrant:
 
 ~~~
-$ vagrant ssh -- get-ips.sh
+$ vagrant box list
 ~~~
 
-Anyway, if other IP addresses shoud be set, it can be configure using the [private_network](https://www.vagrantup.com/docs/networking/private_network) or [public_network](https://www.vagrantup.com/docs/networking/public_network) vagrant config attributes within Vagrantfile manifest.
-
+Thereafter, follow the steps in the [how to use](#how-to-use) section
