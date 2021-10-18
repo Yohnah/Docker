@@ -78,10 +78,10 @@ C:\Users\JohnDoe> docker.exe --help
 
 And a configured and working docker service with docker client binaries installed on host device will be got like Docker Desktop 
 
-~~~
+___
 ***Note:***
-See Docker docs for futher information: https://docs.docker.com/engine/install/binaries/
-~~~
+See Docker docs for futher information about Docker client binaries: https://docs.docker.com/engine/install/binaries/
+___
 
 ## Long prompts
 
