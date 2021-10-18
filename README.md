@@ -76,7 +76,7 @@ C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 C:\Users\JohnDoe> docker.exe --help
 ~~~
 
-And a configured and working docker environment with docker client binaries installed on host device will be got  
+And a configured and working docker service with docker client binaries installed on host device will be got like Docker Desktop 
 
 ## Long prompts
 
