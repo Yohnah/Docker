@@ -122,7 +122,7 @@ After vagrant up is run, the box will trigger local actions onto the host to ins
 3. Setup the DOCKER_HOST environment variable
 ___
 ***Note:***
-If a ***vagrant destroy*** command is performed, the box will also trigger the reset about actions listed above.
+If a ***vagrant destroy*** command is run, the box will also trigger a reset to revert the actions listed above.
 ___
 
 So to just work with docker in your host device, it only needs to vagrant up the Yohnah/Docker box and run the docker client directly within a host terminal
