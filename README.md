@@ -21,6 +21,7 @@ ___
 - [Alternative use of docker on Yohnah/Docker box](#alternative-use-of-docker-on-yohnahdocker-box)
 - [Keep in mind](#keep-in-mind)
   - [Running on MacOS](#running-on-macos)
+  - [Running on VirtualBox](#running-on-virtualbox)
   - [Running on HyperV](#running-on-hyperv)
   - [Running on VMWare_Desktop](#running-on-vmware_desktop)
 - [Building from sources](#building-from-sources)
@@ -42,7 +43,7 @@ ___
 One of the following hypervisors must be installed:
 
 * Virtualbox: <https://www.virtualbox.org/>
-* Parallels: <https://www.parallels.com/> (only x86/amd64 compatible)
+* Parallels: <https://www.parallels.com/> (only x86_64 compatible)
 * Hyper-V: <https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/>
 
 
@@ -151,6 +152,10 @@ The Yohnah/Docker box was built and test on MacOS Big Sur compatible with Vagran
 The main reason about it, I had no the opportunity to get and M1 Apple Silicon to build the packer instructions for M1 chip. So, when I may get one, I'll alter the packer code to support M1. It requires to using an GNU/Linux SO with ARM arch support.
 
 Probably, the adaptation to M1 chip, will be performed on Parallels as hypervisor and not on VirtualBox. VirtualBox has no support for M1 chip yet at the time of writting this.
+
+## Running on VirtualBox
+
+VirtualBox is supported for most kind of operative systems in the market. Virtuanbox run on Windows, MacOs and GNU/Linux (always x86_64), hence, you can use Yohnah/Docker on any Host OS supported by Virtualbox
 
 ## Running on HyperV
 
