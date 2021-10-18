@@ -30,8 +30,8 @@ ___
 ## Compatible Operative Systems
 
 * Windows 10/11
-* MacOS (tested on BigSur)
-* GNU/Linux ()
+* MacOS (tested on BigSur x86_64 arch)
+* GNU/Linux
 
 ## Software
 
