@@ -139,7 +139,7 @@ $ vagrant ssh #in the vagrant folder workspace
 In this manner, the docker client binaries is not neccessary to use
 
 ___
-***Note:*** Set the INSTALL_DOCKER_CLIENT="NO" environment variable before running the ***vagrant up*** command and to avoid the docker client binaries installation and setup onto the host device.
+***Note:*** Set the INSTALL_DOCKER_CLIENT="NO" environment variable before running the ***vagrant up*** command to avoid the docker client binaries installation and setup onto the host device.
 ___
 
 # Keep in mind
