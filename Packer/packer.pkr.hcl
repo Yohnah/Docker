@@ -98,12 +98,12 @@ build {
         ]
     }
 
-    post-processors {
-            post-processor "vagrant-cloud" {
-            box_tag = "Yohnah/Docker"
-            version=var.version
-            version_description="Further information: https://docs.docker.com/engine/release-notes/"
-        }
-    }
+    #post-processors {
+    #        post-processor "vagrant-cloud" {
+    #        box_tag = "Yohnah/Docker"
+    #        version=var.version
+    #        version_description="Further information: https://docs.docker.com/engine/release-notes/"
+    #    }
+    #}
 
 }
