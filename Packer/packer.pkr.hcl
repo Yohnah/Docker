@@ -8,6 +8,7 @@ variable "version" {
 
 locals {
     box_name = "docker"
+    docker_version = "20.10.9"
 }
 
 source "vagrant" "virtualbox" {
@@ -89,7 +90,7 @@ build {
 
     provisioner "shell" {
         environment_vars = [
-            "VERSION=${var.version}"
+            "VERSION=${local.docker_version}"
        ]
         scripts = [
             "${path.root}/Provision/system.sh",
@@ -98,12 +99,12 @@ build {
         ]
     }
 
-    #post-processors {
-    #        post-processor "vagrant-cloud" {
-    #        box_tag = "Yohnah/Docker"
-    #        version=var.version
-    #        version_description="Further information: https://docs.docker.com/engine/release-notes/"
-    #    }
-    #}
+    post-processors {
+            post-processor "vagrant-cloud" {
+            box_tag = "Yohnah/Docker"
+            version=var.version
+            version_description="Further information: https://docs.docker.com/engine/release-notes/"
+        }
+    }
 
 }
