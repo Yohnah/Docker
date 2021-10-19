@@ -1,4 +1,4 @@
-A Docker Desktop alternative on Vagrant
+A Docker Desktop alternative on Vagrant by Hashicorp
 ___
 Just run ***vagrant up*** command and enjoy it using the installed docker client on the same host device where the command was run 
 
@@ -75,6 +75,13 @@ C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
 C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 C:\Users\JohnDoe> docker.exe --help
 ~~~
+
+And a configured and working docker service with docker client binaries installed on host device will be got like Docker Desktop 
+
+___
+***Note:***
+See Docker docs for futher information about Docker client binaries: https://docs.docker.com/engine/install/binaries/
+___
 
 ## Long prompts
 
