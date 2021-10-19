@@ -103,7 +103,7 @@ build {
             post-processor "vagrant-cloud" {
             box_tag = "Yohnah/Docker"
             version=var.version
-            version_description="Further information: https://docs.docker.com/engine/release-notes/"
+            version_description="Installed Docker version: ${local.docker_version}. Further information: https://docs.docker.com/engine/release-notes/"
         }
     }
 
