@@ -1,4 +1,4 @@
-A Docker Desktop alternative on Vagrant
+A Docker Desktop alternative on Vagrant by Hashicorp
 ___
 Just run ***vagrant up*** command and enjoy it using the installed docker client on the same host device where the command was run 
 
