@@ -12,7 +12,7 @@ for /f "tokens=2" %%h in ('vagrant ssh-config ^|findstr "HostName"') do ( SET va
 for /f "tokens=1" %%b in ('vagrant port --guest 2375') do ( SET vagrant_port=%%b)
 setx DOCKER_HOST tcp://%vagrant_hn%:%vagrant_port%
 
-echo Docker service running at tcp://%vagrant_hn%:%vagrant_port
+echo Docker service running at tcp://%vagrant_hn%:%vagrant_port%
 goto:EOF
 
 :copydockercli
