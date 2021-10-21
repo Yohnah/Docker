@@ -1,3 +1,13 @@
+___
+***Notice:***
+
+Due to a problem detected with Vagrant builder for Packer, the Vagrant boxes were disabled til fix them.
+
+it is expected to get the boxes enable again for next week.
+
+Sorry for the inconveniences
+___
+
 A Docker Desktop alternative on Vagrant by Hashicorp
 ___
 Just run ***vagrant up*** command and enjoy it using the installed docker client on the same host device where the command was run 
