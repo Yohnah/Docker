@@ -2,7 +2,7 @@ ___
 ***Notice:***
 Everything is working again. The boxes are available again on Vagrant Cloud, thanks for your patience.
 
-The mayor version was raised it up because of refactoring all code.
+A mayor version was raised it up because of refactoring all code.
 ___
 
 # Begin
