@@ -233,7 +233,7 @@ $ git clone github.com/Yohnah/Docker.git
 And, inside of git workspace run the following command:
 
 ~~~
-docker/$ packer build -var "output_directory=<path to base directory>" -var version="<Docker engine version>" Packer/packer.pkr.hcl
+docker/$ packer build -var "output_directory=<path to base directory>" -var version="<semantic version code>" Packer/packer.pkr.hcl
 ~~~
 ___
 ***Note:*** Comment all lines into packer code about ***vagrant-cloud*** post-processors if you don't want to upload the resulting box to vagrant cloud repository or set the VAGRANT_CLOUD_TOKEN with a vagrant cloud token instead (see [Packer docs about Vagrant Cloud post-processors](https://www.packer.io/docs/post-processors/vagrant/vagrant-cloud) for further information). On the contrary, you will get an error exception on run the command
