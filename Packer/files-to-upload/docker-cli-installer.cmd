@@ -17,12 +17,12 @@ goto:EOF
 
 :copydockercli
 echo Copying Docker cli to folder %docker_path%
-robocopy %current_path%\docker C:\Users\jdelgado\AppData\Local\Yohnah\Docker /MIR >nul
+robocopy %current_path%\docker %docker_path% /MIR
 goto:EOF
 
 :createdockerpath
 echo Creating folder %docker_path%
-md %docker_path% 2>nul
+md %docker_path%
 goto:EOF
 
 :setpath
@@ -31,10 +31,12 @@ setx PATH %~1;%docker_path%
 goto:EOF
 
 :check_path
-for /f "tokens=3" %%a in ('reg query HKCU\Environment /v Path') do ( SET variable=%%a )
-echo %variable%|find "%docker_path%" >nul
-if errorlevel 1 (call:setpath %variable%)
+echo Checking the environment variable PATH
+for /f "tokens=3" %%a in ('reg query HKCU\Environment /v Path') do ( SET variable=%%a)
+echo %variable%|find "%docker_path%"
+if errorlevel 1 ( call:setpath %variable% )
 goto:EOF
+
 
 :main
 call:check_path

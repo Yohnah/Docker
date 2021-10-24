@@ -7,103 +7,226 @@ variable "version" {
 }
 
 locals {
-    box_name = "docker"
+    vm_name = "docker"
+    debian_version = "11.1.0"
     docker_version = "20.10.9"
+    http_directory = "${path.root}/http"
+    iso_url = "https://cdimage.debian.org/debian-cd/${local.debian_version}/amd64/iso-cd/debian-${local.debian_version}-amd64-netinst.iso"
+    iso_checksum = "sha256:8488abc1361590ee7a3c9b00ec059b29dfb1da40f8ba4adf293c7a30fa943eb2"
+    shutdown_command = "echo 'vagrant' | sudo -S shutdown -P now"
+    boot_command = [
+        "<esc><wait10s>",
+        "install <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "debian-installer=en_US.UTF-8 <wait>",
+        "auto <wait>",
+        "locale=en_US.UTF-8 <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
+        "netcfg/get_hostname={{ .Name }} <wait>",
+        "netcfg/get_domain=vagrantup.com <wait>",
+        "fb=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-keymaps-at/keymap=us <wait>",
+        "grub-installer/bootdev=/dev/sda <wait>",
+        "<enter><wait>"    
+    ]
 }
 
-source "vagrant" "virtualbox" {
-    communicator = "ssh"
-    source_path = "Yohnah/Debian"
-    provider = "virtualbox"
-    add_force = false
-    box_name = local.box_name
-    output_dir = "${var.output_directory}/packer-build/output/boxes/${local.box_name}/${var.version}/virtualbox/"
-    skip_add = false
-    output_vagrantfile = "${path.root}/Vagrantfiles/vagrantfile.rb"
+source "virtualbox-iso" "docker" {
+    boot_command = local.boot_command
+    boot_wait = "6s"
+    cpus = 2
+    memory = 1024
+    disk_size = 10240
+    guest_additions_path = "VBoxGuestAdditions_{{.Version}}.iso"
+    guest_additions_url = ""
+    guest_os_type = "docker_64"
+    hard_drive_interface = "sata"
+    headless = false
+    http_content = {
+         "/preseed.cfg" = templatefile("${path.root}/http/preseed.cfg.pkrtpl", {})
+    }
+    iso_checksum = local.iso_checksum
+    iso_url = local.iso_url
+    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.version}/virtualbox/"
+    shutdown_command = local.shutdown_command
+    ssh_password = "vagrant"
+    ssh_port = 22
+    ssh_timeout = "10000s"
+    ssh_username = "vagrant"
+    virtualbox_version_file = ".vbox_version"
+    vm_name = "${local.vm_name}"
+    vboxmanage = [
+        ["modifyvm", "{{.Name}}", "--vram", "128"],
+        ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga"],
+        ["modifyvm", "{{.Name}}", "--vrde", "off"],
+        ["modifyvm", "{{.Name}}", "--rtcuseutc", "on"]
+    ]
 }
 
-source "vagrant" "parallels" {
-    communicator = "ssh"
-    source_path = "Yohnah/Debian"
-    provider = "parallels"
-    add_force = false
-    box_name = local.box_name
-    output_dir = "${var.output_directory}/packer-build/output/boxes/${local.box_name}/${var.version}/parallels/"
-    skip_add = false
-    output_vagrantfile = "${path.root}/Vagrantfiles/vagrantfile.rb"
+source "parallels-iso" "docker" {
+    boot_command = local.boot_command
+    boot_wait = "6s"
+    cpus = 2
+    memory = 1024
+    disk_size = 10240
+    guest_os_type = "debian"
+    http_content = {
+         "/preseed.cfg" = templatefile("${path.root}/http/preseed.cfg.pkrtpl", {})
+    }
+    iso_checksum = local.iso_checksum
+    iso_url = local.iso_url
+    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.version}/parallels/"
+    shutdown_command = local.shutdown_command
+    parallels_tools_flavor = "lin"
+    ssh_password = "vagrant"
+    ssh_port = 22
+    ssh_timeout = "10000s"
+    ssh_username = "vagrant"
+    prlctl_version_file = ".prlctl_version"
+    vm_name = "${local.vm_name}"
 }
 
-source "vagrant" "hyperv" {
-    communicator = "ssh"
-    source_path = "Yohnah/Debian"
-    provider = "hyperv"
-    add_force = false
-    box_name = local.box_name
-    output_dir = "${var.output_directory}/packer-build/output/boxes/${local.box_name}/${var.version}/hyperv/"
-    skip_add = false
-    output_vagrantfile = "${path.root}/Vagrantfiles/vagrantfile.rb"
+source "vmware-iso" "docker" {
+    boot_command = local.boot_command
+    boot_wait = "6s"
+    cpus = 2
+    memory = 1024
+    disk_size = 10240
+    guest_os_type = "debian8-64"
+    headless = false
+    http_content = {
+         "/preseed.cfg" = templatefile("${path.root}/http/preseed.cfg.pkrtpl", {})
+    }
+    iso_checksum = local.iso_checksum
+    iso_url = local.iso_url
+    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.version}/vmware/"
+    shutdown_command = local.shutdown_command
+    ssh_password = "vagrant"
+    ssh_port = 22
+    ssh_timeout = "10000s"
+    ssh_username = "vagrant"
+    tools_upload_flavor = "linux"
+    vm_name = "${local.vm_name}"
+    vmx_data = {
+        "cpuid.coresPerSocket": "1",
+        "ethernet0.pciSlotNumber": "32"
+      }
+    vmx_remove_ethernet_interfaces = true
+}
+
+source "hyperv-iso" "docker" {
+    boot_command = local.boot_command
+    boot_wait = "6s"
+    cpus = 2
+    memory = 1024
+    disk_size = 10240
+    generation = 1
+    headless = false
+    http_content = {
+         "/preseed.cfg" = templatefile("${path.root}/http/preseed.cfg.pkrtpl", {})
+    }
+    iso_checksum = local.iso_checksum
+    iso_url = local.iso_url
+    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.version}/hyperv/"
+    shutdown_command = local.shutdown_command
+    ssh_password = "vagrant"
+    ssh_port = 22
+    ssh_timeout = "10000s"
+    ssh_username = "vagrant"
+    switch_name = "Default Switch"
+    enable_virtualization_extensions = false
+    enable_mac_spoofing = false
+    vm_name = "${local.vm_name}"
 }
 
 build {
     name = "builder"
+
     sources = [
-        "source.vagrant.virtualbox",
-        "source.vagrant.parallels",
-        "source.vagrant.hyperv"
+        "source.virtualbox-iso.docker",
+        "source.parallels-iso.docker",
+        "source.vmware-iso.docker",
+        "source.hyperv-iso.docker"
+
     ]
 
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/motd"
-        destination = "/tmp/motd"
+    provisioner "shell" {
+        environment_vars  = ["HOME_DIR=/home/vagrant"]
+        execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+        expect_disconnect = true
+        scripts = [
+            "${path.root}/setup-os-scripts/update.sh",
+            "${path.root}/setup-os-scripts/sshd.sh",
+            "${path.root}/setup-os-scripts/networking.sh",
+            "${path.root}/setup-os-scripts/sudoers.sh",
+            "${path.root}/setup-os-scripts/vagrant-conf.sh",
+            "${path.root}/setup-os-scripts/systemd.sh"
+        ] 
     }
 
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/get-ips.sh"
-        destination = "/tmp/get-ips.sh"
+    provisioner "shell" {
+        only = ["virtualbox-iso.docker"]
+        environment_vars  = ["HOME_DIR=/home/vagrant"]
+        execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+        expect_disconnect = true
+        scripts = [
+            "${path.root}/setup-os-scripts/virtualbox.sh"
+        ] 
     }
 
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/docker-cli-installer.cmd"
-        destination = "/tmp/docker-cli-installer.cmd"
+    provisioner "shell" {
+        only = ["parallels-iso.docker"]
+        environment_vars  = ["HOME_DIR=/home/vagrant"]
+        execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+        expect_disconnect = true
+        scripts = [
+            "${path.root}/setup-os-scripts/parallels.sh"
+        ] 
     }
 
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/docker-cli-uninstaller.cmd"
-        destination = "/tmp/docker-cli-uninstaller.cmd"
+    provisioner "shell" {
+        only = ["vmware-iso.docker"]
+        environment_vars  = ["HOME_DIR=/home/vagrant"]
+        execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+        expect_disconnect = true
+        scripts = [
+            "${path.root}/setup-os-scripts/parallels.sh"
+        ] 
     }
 
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/docker-cli-installer.sh"
-        destination = "/tmp/docker-cli-installer.sh"
+    provisioner "file" {
+        source      = "${path.root}/files-to-upload/"
+        destination = "/tmp/"
     }
-
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/docker-cli-uninstaller.sh"
-        destination = "/tmp/docker-cli-uninstaller.sh"
-    }
-
-    provisioner "file"{
-        source = "${path.root}/Provision/Files/deploy-docker-files.sh"
-        destination = "/tmp/deploy-docker-files.sh"
-    }
-
 
     provisioner "shell" {
         environment_vars = [
             "VERSION=${local.docker_version}"
-       ]
+        ]
         scripts = [
-            "${path.root}/Provision/system.sh",
-            "${path.root}/Provision/docker.sh",
-            "${path.root}/Provision/clean.sh"
+            "${path.root}/provision-scripts/system-os.sh",
+            "${path.root}/provision-scripts/docker.sh"
         ]
     }
 
+    provisioner "shell" {
+        environment_vars  = ["HOME_DIR=/home/vagrant"]
+        execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+        expect_disconnect = true
+        scripts = [
+            "${path.root}/setup-os-scripts/cleanup.sh",
+            "${path.root}/setup-os-scripts/minimize.sh"
+        ] 
+    }
+
     post-processors {
-            post-processor "vagrant-cloud" {
-            box_tag = "Yohnah/Docker"
-            version=var.version
-            version_description="Installed Docker version: ${local.docker_version}. Further information: https://docs.docker.com/engine/release-notes/"
+        post-processor "vagrant" {
+          keep_input_artifact = false
+          output = "${var.output_directory}/packer-build/output/boxes/${local.vm_name}/${var.version}/{{.Provider}}/{{.BuildName}}.box"
+          vagrantfile_template = "${path.root}/vagrantfile.rb"
         }
     }
 

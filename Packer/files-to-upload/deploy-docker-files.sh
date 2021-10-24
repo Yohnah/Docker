@@ -1,9 +1,8 @@
 #!/bin/bash
 
-OSHOST=$1
-HYPERVISOR=$2
+OSHOST=${OSType}
+HYPERVISOR=${HyperVisor}
 INSTALL_DIR="/vagrant/installer"
-
 SERVICE_IP=$(ip -4 addr | grep "eth" | grep "inet" | awk '{ print $2 }' | head -n 2 | tail -n 1 | awk -F/ '{ print $1 }')
 
 mount | grep -i "/vagrant" > /dev/null
@@ -13,7 +12,6 @@ if [[ $? == "1" ]]; then
 fi
 
 mkdir -p $INSTALL_DIR
-
 rm -fr $INSTALL_DIR/*
 
 echo "Uncompress docker cli binary for $OSHOST operative system to /vagrant/install/"
@@ -41,6 +39,21 @@ case "$HYPERVISOR" in
                 echo "Fixing docker-cli-installer script for hyperv hypervisor"
                 sed -i "s#for /f \"tokens=2\" %%h in ('vagrant ssh-config ^|findstr \"HostName\"') do ( SET vagrant_hn=%%h)#set vagrant_hn=$SERVICE_IP#g" $INSTALL_DIR/docker-cli-installer.cmd
                 sed -i "s#for /f \"tokens=1\" %%b in ('vagrant port --guest 2375') do ( SET vagrant_port=%%b)#set vagrant_port=2375#g" $INSTALL_DIR/docker-cli-installer.cmd
+        ;;
+        "vmware_desktop")
+                case "$OSHOST" in
+                        "win")
+                                echo "Fixing docker-cli-installer script for vmware hypervisor"
+                                sed -i "s#for /f \"tokens=2\" %%h in ('vagrant ssh-config ^|findstr \"HostName\"') do ( SET vagrant_hn=%%h)#set vagrant_hn=$SERVICE_IP#g" $INSTALL_DIR/docker-cli-installer.cmd
+                                sed -i "s#for /f \"tokens=1\" %%b in ('vagrant port --guest 2375') do ( SET vagrant_port=%%b)#set vagrant_port=2375#g" $INSTALL_DIR/docker-cli-installer.cmd
+
+                        ;;
+                        "mac"|"linux")
+                                echo "Fixing docker-cli-installer script for vmware_desktop hypervisor"
+                                sed -i "s#VAGRANT_HOSTNAME=\$(vagrant ssh-config | grep -i \"HostName\" | awk '{ print \$2 }')#VAGRANT_HOSTNAME=\"$SERVICE_IP\"#g" $INSTALL_DIR/docker-cli-installer.sh
+                                sed -i "s#VAGRANT_PORT=\$(vagrant port --guest 2375)#VAGRANT_PORT=\"2375\"#g" $INSTALL_DIR/docker-cli-installer.sh
+                        ;;
+                esac
         ;;
 esac
 

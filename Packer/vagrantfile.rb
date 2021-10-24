@@ -52,29 +52,28 @@ end
 
 $msg = <<MSG
 Welcome to Docker Linux box for Vagrant by Yohnah
+=================================================
 
-Host Operative System: #{Host_OS}
-
+Host Operative System detected: #{Host_OS}
 Yohnah/Docker was successfully installed on your device
 
-Environment variables were updated in your user profile, but it is necessary reload terminal, thus, open a new terminal and close this one
-
-Once refreshed the enviroment variables in your terminal, just run "docker" command
-
 Further information, see: https://github.com/Yohnah/Docker
+
+Reload your terminal to refresh the environment variables
+
+Run the following command to list the assigned IP addresses:
+
+  vagrant ssh -- get-ips.sh
 
 MSG
 
 Vagrant.configure(2) do |config|
   config.vm.post_up_message = $msg
   config.ssh.shell = '/bin/sh'
-  config.vm.hostname = "docker"
 
   config.vm.synced_folder HostDir, GuestDir
-
+  
   config.vm.network "forwarded_port", guest: 2375, host: 2375, host_ip: "127.0.0.1", auto_correct: true
-
-  config.vm.network "private_network", type: "dhcp"
 
   config.vm.provider "virtualbox" do |vb, override|
     vb.memory = 512
@@ -82,43 +81,53 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
     vb.customize ["modifyvm", :id, "--audio", "none"]
-    vb.customize ["modifyvm", :id, "--uart1", "off"] #Disconnect serial port to permit box up on windows/non-unixlike devices
+    vb.customize ["modifyvm", :id, "--uart1", "off"]
     vb.customize ['modifyvm', :id, '--vrde', 'off']
-
-    if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-      override.vm.provision "shell", inline: "/usr/bin/deploy-docker-files.sh #{Host_OS} virtualbox"
-    end
-
-  end
-
-  config.vm.provider "hyperv" do |hv, override|
-    hv.memory = 512
-    hv.cpus = 2
-    if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-      override.vm.provision "shell", inline: "/usr/bin/deploy-docker-files.sh #{Host_OS} hyperv"
-    end
+    override.vm.network "private_network", type: "dhcp"
+    override.vm.provision "shell",
+      env: {"OSType" => Host_OS,"HyperVisor" => "virtualbox"}, 
+      inline: "bash /usr/bin/deploy-docker-files.sh"
   end
 
   config.vm.provider "parallels" do |pl, override|
     pl.memory = 512
     pl.cpus = 2
-    if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-      override.vm.provision "shell", inline: "/usr/bin/deploy-docker-files.sh #{Host_OS} parallels"
+    override.vm.network "private_network", type: "dhcp"
+    override.vm.provision "shell",
+      env: {"OSType" => Host_OS,"HyperVisor" => "parallels"}, 
+      inline: "bash /usr/bin/deploy-docker-files.sh"
+  end
+
+  config.vm.provider "hyperv" do |hv, override|
+    hv.memory = 512
+    hv.cpus = 2
+    override.vm.provision "shell",
+      env: {"OSType" => Host_OS,"HyperVisor" => "hyperv"}, 
+      inline: "bash /usr/bin/deploy-docker-files.sh"
+  end
+
+  config.vm.provider "vmware_desktop" do |vm, override|
+    vm.memory = 512
+    vm.cpus = 2
+    override.vm.provision "shell",
+      env: {"OSType" => Host_OS,"HyperVisor" => "vmware_desktop"}, 
+      inline: "bash /usr/bin/deploy-docker-files.sh"
+  end
+
+  if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
+    config.trigger.after :up, :provision, :reload do |install|
+      install.name = "Installing docker client"
+      install.info = "Running docker-cli installer"
+      install.run = {inline: $install_docker_client}
     end
   end
 
   if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-    config.trigger.before :destroy do |trigger|
-      trigger.name = "Uninstalling docker client"
-      trigger.run = {inline: $uninstall_docker_client}
-      trigger.run_remote = {inline: "rm -fr /vagrant/installer"}
-    end
-  end
-
-  if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-    config.trigger.after :up do |trigger|
-      trigger.name = "Installing docker client"
-      trigger.run = {inline: $install_docker_client}
+    config.trigger.before :destroy, :reload do |uninstall|
+      uninstall.name = "Uninstalling docker client"
+      uninstall.info = "Running docker-cli uninstaller"
+      uninstall.run = {inline: $uninstall_docker_client}
+      uninstall.run_remote = {inline: "rm -fr /vagrant/installer"}
     end
   end
 
