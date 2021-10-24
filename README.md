@@ -218,7 +218,7 @@ VMWare fusion was used to create and test the vagrant box, hence, if you detect 
 
 There are several known issues when Vagrant is running using vmware_desktop provider. Please, visit <https://www.vagrantup.com/docs/providers/vmware/known-issues> for futher information.
 
-One of those issues is a lossing DNS connection when a private network is created. So if you need to access the service published by a running docker container, you will have to use the same IP address as the one used by vagrant ssh. Be aware of port conflicts with DOCKER_HOST running port
+One of those issues is a loss DNS connection when a private network is created. So if you need to access the service published by a running docker container, you will have to use the same IP address as the one used by vagrant ssh. Be aware of port conflicts with DOCKER_HOST running port
 
 # Building from sources
 
