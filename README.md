@@ -58,7 +58,7 @@ One of the following hypervisors must be installed:
 
 # Issues
 
-If you get an issue or problem running Yohnah/Docker, please, kindly open a issue into [issues section](https://github.com/Yohnah/Docker/issues) into GitHub portal. Please, be as detailed as possible 
+If you get an issue or problem running Yohnah/Docker, please, kindly open a new issue ticket or review the current issue tickets into [issues section](https://github.com/Yohnah/Docker/issues) into GitHub portal. Please, be as detailed as possible 
 
 # How to use
 
