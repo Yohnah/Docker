@@ -10,6 +10,10 @@ variable "version_description"{
   type = string
 }
 
+variable "provider"{
+  type = string
+}
+
 locals {
     vm_name = "docker"
     box_files = [
