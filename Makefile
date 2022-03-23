@@ -3,7 +3,7 @@ CURRENT_DOCKER_VERSION := $(shell curl -s https://docs.docker.com/engine/release
 CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/ | grep -oE "debian-(.*)-amd64-netinst.iso" | sed -e 's/<[^>]*>//g' | cut -d">" -f 1 | sed 's/"//g' | head -n 1 | cut -d- -f2)
 OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
-PROVIDER := "virtualbox"
+PROVIDER := virtualbox
 
 .PHONY: all version build test clean_test upload clean
 
@@ -14,7 +14,7 @@ version:
 	@echo Current Docker Version: $(CURRENT_DOCKER_VERSION)
 	@echo Current Box Version: $(CURRENT_BOX_VERSION)
 	@echo Current Debian Version: $(CURRENT_DEBIAN_VERSION)
-	@echo Provider: $(DEFAULT_PROVIDER)
+	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
 
