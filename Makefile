@@ -19,14 +19,14 @@ version:
 	@echo ""
 
 build:
-ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Nothing to do
 else
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
 endif
 
 test:
-ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Nothing to do
 else
 	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
@@ -38,7 +38,7 @@ else
 endif
 
 clean_test:
-ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Nothing to do
 else
 	vagrant box remove testing-docker-box || true
@@ -46,14 +46,14 @@ else
 endif
 
 upload:
-ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Nothing to do
 else
 	cd Packer; packer build -var "input_directory=$(OUTPUT_DIRECTORY)" -var "version=$(CURRENT_DOCKER_VERSION)" -var "version_description=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 endif
 
 clean: clean_test
-ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Nothing to do
 else
 	rm -fr $(OUTPUT_DIRECTORY)/packer-build
