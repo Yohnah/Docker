@@ -1,0 +1,29 @@
+name: Build vagrant box and upload
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '00 22 */7 * *'
+  workflow_dispatch:
+
+env:
+  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+
+jobs:
+  BuiltandUpload:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Check the current and new vagrant box version
+        run: make version
+      - name: Build the vagrant box
+        run: make build
+      - name: Test if vagrant box was correctly built
+        run: make test
+      - name: Upload box to Vagrant Cloud
+        run: make upload
+      - name: Clean all
+        run: make clean
+ 

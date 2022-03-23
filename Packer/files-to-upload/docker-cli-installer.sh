@@ -34,6 +34,7 @@ function install_docker_cli(){
 
 function set_environment_variables(){
     code_to_dump='ls $HOME/.Yohnah/envs/*.env | while read FILE; do . $FILE; done'
+    touch $PROFILE_FILE
     grep -Fxq "$code_to_dump" $PROFILE_FILE
     if [[ $? == 1 ]]; then
         echo "Configuring $PROFILE_FILE"

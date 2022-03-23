@@ -5,7 +5,7 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
 sudo apt-get update
 
-DOCKER_VERSION=$(apt-cache madison docker-ce | grep -i "20.10.9" | awk -F\| '{ print $2 }' | tr -d '[:space:]')
+DOCKER_VERSION=$(apt-cache madison docker-ce | grep -i "$VERSION" | awk -F\| '{ print $2 }' | tr -d '[:space:]')
 sudo apt-get -y install docker-ce=$DOCKER_VERSION docker-ce-cli=$DOCKER_VERSION containerd.io
 
 sudo mkdir -p /etc/systemd/system/docker.service.d

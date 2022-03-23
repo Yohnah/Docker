@@ -2,17 +2,21 @@ variable "output_directory" {
     type = string
 }
 
-variable "version" {
+variable "docker_version" {
+    type = string
+}
+
+variable "debian_version" {
     type = string
 }
 
 locals {
     vm_name = "docker"
-    debian_version = "11.1.0"
-    docker_version = "20.10.9"
+    debian_version = var.debian_version
+    docker_version = var.docker_version
     http_directory = "${path.root}/http"
-    iso_url = "https://cdimage.debian.org/debian-cd/${local.debian_version}/amd64/iso-cd/debian-${local.debian_version}-amd64-netinst.iso"
-    iso_checksum = "sha256:8488abc1361590ee7a3c9b00ec059b29dfb1da40f8ba4adf293c7a30fa943eb2"
+    iso_url = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-${local.debian_version}-amd64-netinst.iso"
+    iso_checksum = "file:https://cdimage.debian.org/debian-cd/${local.debian_version}/amd64/iso-cd/SHA256SUMS"
     shutdown_command = "echo 'vagrant' | sudo -S shutdown -P now"
     boot_command = [
         "<esc><wait10s>",
@@ -50,7 +54,7 @@ source "virtualbox-iso" "docker" {
     }
     iso_checksum = local.iso_checksum
     iso_url = local.iso_url
-    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.version}/virtualbox/"
+    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.docker_version}/virtualbox/"
     shutdown_command = local.shutdown_command
     ssh_password = "vagrant"
     ssh_port = 22
@@ -193,7 +197,7 @@ build {
         execute_command   = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
         expect_disconnect = true
         scripts = [
-            "${path.root}/setup-os-scripts/parallels.sh"
+            "${path.root}/setup-os-scripts/vmware.sh"
         ] 
     }
 
@@ -225,7 +229,7 @@ build {
     post-processors {
         post-processor "vagrant" {
           keep_input_artifact = false
-          output = "${var.output_directory}/packer-build/output/boxes/${local.vm_name}/${var.version}/{{.Provider}}/{{.BuildName}}.box"
+          output = "${var.output_directory}/packer-build/output/boxes/${local.vm_name}/${var.docker_version}/{{.Provider}}/{{.BuildName}}.box"
           vagrantfile_template = "${path.root}/vagrantfile.rb"
         }
     }

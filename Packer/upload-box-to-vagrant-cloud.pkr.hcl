@@ -6,26 +6,23 @@ variable "version" {
     type = string
 }
 
-variable "providers" {
-    type = list(string)
-    default = ["virtualbox","parallels","hyperv","vmware_desktop"]
+variable "version_description"{
+  type = string
 }
-
 
 locals {
     vm_name = "docker"
     box_files = [
-        for pv in var.providers: 
-            "${var.input_directory}/packer-build/output/boxes/${local.vm_name}/${var.version}/${pv}/docker.box"
+            "${var.input_directory}/packer-build/output/boxes/${local.vm_name}/${var.version}/${var.provider}/docker.box"
     ]
 }
 
-source "null" "uploading" {
+source "null" "docker" {
   communicator = "none"
 }
 
 build {
-  sources = ["source.null.dummy"]
+  sources = ["source.null.docker"]
 
   post-processors {
     post-processor "artifice" {
@@ -33,7 +30,9 @@ build {
     }
     post-processor "vagrant-cloud" {
       box_tag      = "Yohnah/Docker"
+      keep_input_artifact = false
       version      = var.version
+      version_description = "Built at ${var.version_description}"
     }
   }
 }
