@@ -29,7 +29,7 @@ test:
 ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
 	@echo Nothing to do
 else
-	vagrant box add --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
+	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
 	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant provision; \
@@ -49,7 +49,7 @@ upload:
 ifeq ($(CURRENT_DOCKER_VERSION),$(CURRENT_BOX_VERSION))
 	@echo Nothing to do
 else
-	cd Packer; packer build -var "input_directory=$(OUTPUT_DIRECTORY)" -var "version=$(NEW_VERSION)" -var "version_description=Build version: $(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
+	cd Packer; packer build -var "input_directory=$(OUTPUT_DIRECTORY)" -var "version=$(CURRENT_DOCKER_VERSION)" -var "version_description=Build version: $(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 endif
 
 clean: clean_test
