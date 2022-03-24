@@ -1,7 +1,7 @@
 name: Build vagrant box and upload
 on:
   schedule:
-    - cron: '23 22 * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 env:
