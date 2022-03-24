@@ -1,20 +1,15 @@
-___
-***Notice:***
-Everything is working again. The boxes are available again on Vagrant Cloud, thanks for your patience.
-
-A mayor version was raised it up because of refactoring all code.
-___
-
 # Begin
 
 Welcome to this modest project, a Docker Desktop alternative on Vagrant by Hashicorp
 
 Just run ***vagrant up*** command and get a worked Docker Desktop alterative
 
-Debian GNU/Linux is used as OS based system for compatibily reasons among the listed hypervisors below
+Debian GNU/Linux is used as OS based system for compatibily reasons among the listed [hypervisors](#hypervisor) below
 ___
 ***Note:***
 Vagrant Cloud repository: [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
+
+Due to some limitations the Vagrant Cloud repository has only boxes for Virtualbox provider. If you need to get a version for one of compatible [hypervisors](#hypervisor), please see the "[Building from sources](#building-from-sources)" section for more information
 ___
 
 - [Begin](#begin)
@@ -37,17 +32,17 @@ ___
 
 # Requirements
 
-## Compatible Operative System on host
+## Compatible Operative Systems as host
 
 * Windows 10/11
-* MacOS (tested on BigSur x86_64 arch)
+* MacOS (tested on BigSur x86_64 and higher)
 * GNU/Linux
 
 ## Software
 
 * Vagrant: <https://www.vagrantup.com/>
 
-## Hypervisor
+## Hypervisors
 
 One of the following hypervisors must be installed:
 
@@ -56,9 +51,16 @@ One of the following hypervisors must be installed:
 * Hyper-V: <https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/>
 * VMWare Workstation or Fusion: <https://www.vmware.com/>
 
+## In order to build yourself
+
+* GNU Make: <https://www.gnu.org/software/make/>
+* Packer: <https://www.packer.io/>
+* jq: <https://stedolan.github.io/jq/>
+* Window Subsystem LInux or CygWin if Windows is used (to run the "make" command)
+
 # Issues
 
-If you get an issue or problem running Yohnah/Docker, please, kindly open a new issue ticket or review the current issue tickets into [issues section](https://github.com/Yohnah/Docker/issues) into GitHub portal. Please, be as detailed as possible 
+If you get an issue or problem running Yohnah/Docker, please, kindly open a new issue ticket or review the current issue tickets into [issues section](https://github.com/Yohnah-org/Docker/issues) into GitHub portal. Please, be as detailed as possible 
 
 # How to use
 
@@ -88,7 +90,7 @@ C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 C:\Users\JohnDoe> docker.exe --help
 ~~~
 
-Resulting a configured and working docker service and installed client binaries on host device to be used just like Docker Desktop does
+Resulting a configured and worked docker service and installed client binaries on host device to be used just like Docker Desktop does
 
 ___
 ***Note:***
@@ -166,6 +168,18 @@ $ vagrant provision
 ~~~
 ___
 
+The vagrant boxes versions match with Docker versions according to releases notes of Docker <https://docs.docker.com/release-notes/>
+
+Once a new Docker version is published from Docker team, a new Yohnah/Docker version will be also published at Vagrant Cloud repository in the following 24 hours using the same semantic versioning as used for the released docker version. Thus, if you need to use a specific Docker version, you can initialize the vagrant directory for setting the box version that you want:
+
+Ex:
+If you need the docker version 20.10.13, just run:
+~~~
+$ vagrant init --box-version '20.10.13' Yohnah/Docker
+~~~
+
+and following the rest of vagrant commands explained above
+
 
 # Alternative use of docker on Yohnah/Docker box
 
@@ -183,6 +197,13 @@ ___
 
 # Port forwarding access
 
+A private host only nic interface is created to work with the running box. To get the IP address run within vagrant directory:
+
+~~~
+$ vagrant ssh -- get-ip.sh
+~~~
+
+And use that IP to interact with docker services running within the running box
 
 # Keep in mind
 
@@ -214,7 +235,7 @@ One of those limitations is that Vagrant cannot create private networks to obtai
 
 ## Running on VMWare_Desktop
 
-VMWare fusion was used to create and test the vagrant box, hence, if you detect any trouble using it on WMWare workstation or others, please, kindly report it into [issues section](https://github.com/Yohnah/Docker/issues)
+VMWare fusion was used to create and test the vagrant box, hence, if you detect any trouble using it on WMWare workstation or others, please, kindly report it into [issues section](https://github.com/Yohnah-org/Docker/issues)
 
 There are several known issues when Vagrant is running using vmware_desktop provider. Please, visit <https://www.vagrantup.com/docs/providers/vmware/known-issues> for futher information.
 
@@ -227,19 +248,64 @@ Another option to use Yohnah/Box is building it from sources.
 To reach it out, first of all, the code must be cloned from the git repository on GitHub:
 
 ~~~
-$ git clone github.com/Yohnah/Docker.git
+$ git clone github.com/Yohnah-org/Docker.git
 ~~~
 
 And, inside of git workspace run the following command:
 
-~~~
-docker/$ packer build -var "output_directory=<path to base directory>" -var version="<semantic version code>" Packer/packer.pkr.hcl
-~~~
-___
-***Note:*** Comment all lines into packer code about ***vagrant-cloud*** post-processors if you don't want to upload the resulting box to vagrant cloud repository or set the VAGRANT_CLOUD_TOKEN with a vagrant cloud token instead (see [Packer docs about Vagrant Cloud post-processors](https://www.packer.io/docs/post-processors/vagrant/vagrant-cloud) for further information). On the contrary, you will get an error exception on run the command
-___
+## Running the GNU make command
 
-Which ***output_directory*** variable set the base directory where built artifacts and the package box will be dumped, and the ***version*** variable set the Docker engine version to be installed into box (see [docker docs](https://docs.docker.com/engine/release-notes/) for futher information)
+~~~
+docker/$ make
+~~~
+
+And a local box for virtualbox provider will build.
+
+If you want to build a box for another [Hypervisor](#hypervisor) compatible, just run the make command as follows:
+
+~~~
+docker/$ make PROVIDER=<hypervisor>
+~~~
+
+Ex:
+~~~
+docker/$ make PROVIDER=virtualbox #default behaviour
+docker/$ make PROVIDER=hyperv
+docker/$ make PROVIDER=virtualbox
+docker/$ make PROVIDER=parallels
+~~~
+
+Once make was done, the box can be found at /tmp/packer-build directory
+
+## Just Packer
+
+On the other hand, you want to build the box just using Packer, then you have to fit the following variables in:
+
+* output_directory to set the path where packer dump the box
+* docker_version to set what version of docker must be installed
+* debian_version to set the version of debian to build the virtual machine golden image for the esulting box
+
+Also, you must use the -only param to set what provider want to use:
+
+* builder.virtualbox-iso.docker
+* builder.parallels-iso.docker
+* builder.vmware-iso.docker
+* builder.hyperv-iso.docker
+
+As follows:
+
+~~~
+docker/$ packer build -var "output_directory=</path/to/dump/the/box>" -var "debian_version=<version of debian>" -var "docker_version=<version of docker>" -only <builder to build the box> packer.pkr.hcl
+~~~
+
+Ex:
+~~~
+docker/$ packer build -var "output_directory=/tmp" -var "debian_version=11.2.0" -var "docker_version=20.10.13" -only builder.virtualbox-iso.docker packer.pkr.hcl
+~~~
+
+For getting a built virtualbox box 
+
+## Test and use it
 
 Once the package box is created, just import it into vagrant doing:
 
