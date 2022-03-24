@@ -90,7 +90,7 @@ C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 C:\Users\JohnDoe> docker.exe --help
 ~~~
 
-Where "<docker version>" is the specific version of docker you want to use according docker releases notes <https://docs.docker.com/release-notes/>
+Where "\<docker version\>" is the specific version of docker you want to use according docker releases notes <https://docs.docker.com/release-notes/>
 
 Resulting a configured and worked docker service and installed client binaries on host device to be used just like Docker Desktop does
 
