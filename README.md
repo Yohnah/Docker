@@ -69,7 +69,7 @@ If you get an issue or problem running Yohnah/Docker, please, kindly open a new 
 Run on Unix-Like and MacOs:
 
 ~~~
-$ vagrant init Yohnah/Docker
+$ vagrant init Yohnah/Docker #or vagrant init --box-version '<docker version>' Yohnah/Docker
 $ vagrant up #or vagrant up --provider <hypervisor>
 $ docker --help
 ~~~
@@ -77,7 +77,7 @@ $ docker --help
 On Windows PowerShell:
 
 ~~~
-PS C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
+PS C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker #or vagrant.exe init --box-version '<docker version>' Yohnah/Docker
 PS C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 PS C:\Users\JohnDoe> docker.exe --help
 ~~~
@@ -85,10 +85,12 @@ PS C:\Users\JohnDoe> docker.exe --help
 On Windows CMD:
 
 ~~~
-C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
+C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker #or vagrant.exe init --box-version '<docker version>' Yohnah/Docker
 C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 C:\Users\JohnDoe> docker.exe --help
 ~~~
+
+Where "<docker version>" is the specific version of docker you want to use according docker releases notes <https://docs.docker.com/release-notes/>
 
 Resulting a configured and worked docker service and installed client binaries on host device to be used just like Docker Desktop does
 
