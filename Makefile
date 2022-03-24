@@ -38,12 +38,8 @@ else
 endif
 
 clean_test:
-ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
-	@echo Nothing to do
-else
 	vagrant box remove testing-docker-box || true
-	rm -fr $(OUTPUT_DIRECTORY)/vagrant-docker-test
-endif
+	rm -fr $(OUTPUT_DIRECTORY)/vagrant-docker-test || true
 
 upload:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
@@ -53,8 +49,4 @@ else
 endif
 
 clean: clean_test
-ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
-	@echo Nothing to do
-else
-	rm -fr $(OUTPUT_DIRECTORY)/packer-build
-endif
+	rm -fr $(OUTPUT_DIRECTORY)/packer-build || true
