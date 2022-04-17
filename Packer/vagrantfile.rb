@@ -82,7 +82,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 2375, host: 2375, host_ip: "127.0.0.1", auto_correct: true
 
   config.vm.provider "virtualbox" do |vb, override|
-    vb.memory = 512
+    vb.memory = 2048
     vb.cpus = 2
     vb.customize ["modifyvm", :id, "--vram", "128"]
     vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
@@ -96,7 +96,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provider "parallels" do |pl, override|
-    pl.memory = 512
+    pl.memory = 2048
     pl.cpus = 2
     override.vm.network "private_network", type: "dhcp"
     override.vm.provision "shell",
@@ -105,7 +105,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provider "hyperv" do |hv, override|
-    hv.memory = 512
+    hv.memory = 2048
     hv.cpus = 2
     override.vm.provision "shell",
       env: {"OSType" => Host_OS,"HyperVisor" => "hyperv"}, 
@@ -113,7 +113,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provider "vmware_desktop" do |vm, override|
-    vm.memory = 512
+    vm.memory = 2048
     vm.cpus = 2
     override.vm.provision "shell",
       env: {"OSType" => Host_OS,"HyperVisor" => "vmware_desktop"}, 
@@ -121,7 +121,7 @@ Vagrant.configure(2) do |config|
   end
 
   if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-    config.trigger.after :up, :provision, :reload do |install|
+    config.trigger.after :up, :provision do |install|
       install.name = "Installing docker client"
       install.info = "Running docker-cli installer"
       install.run = {inline: $install_docker_client}
@@ -129,7 +129,7 @@ Vagrant.configure(2) do |config|
   end
 
   if ENV['INSTALL_DOCKER_CLIENT'].to_s.downcase != "no"
-    config.trigger.before :destroy, :reload do |uninstall|
+    config.trigger.before :destroy do |uninstall|
       uninstall.name = "Uninstalling docker client"
       uninstall.info = "Running docker-cli uninstaller"
       uninstall.run = {inline: $uninstall_docker_client}

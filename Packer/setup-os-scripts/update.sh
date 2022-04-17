@@ -26,3 +26,8 @@ apt-get update;
 
 apt-get -y upgrade linux-image-$arch;
 apt-get -y install linux-headers-`uname -r`;
+
+
+#Rolling back CGroup v1 to apps compatibility such as Rancher or OpenStack
+echo 'GRUB_CMDLINE_LINUX=$GRUB_CMDLINE_LINUX" systemd.unified_cgroup_hierarchy=false systemd.legacy_systemd_cgroup_controller=false"' > /etc/default/grub.d/rollback_to_cgroup_v1.cfg
+update-grub

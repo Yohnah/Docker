@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
 
-.PHONY: all version build test clean_test upload clean
+.PHONY: all version build load_box destroy_box test clean_test upload clean
 
 all: version build test
 
@@ -36,6 +36,15 @@ else
 	DOCKER_HOST="tcp://$(vagrant ssh-config | grep -i "HostName" | awk '{ print $2 }'):$(vagrant port --guest 2375)/" $(HOME)/.Yohnah/Docker/docker run hello-world; \
 	vagrant destroy -f 
 endif
+
+load_box:
+	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
+	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
+	vagrant up --provider $(PROVIDER); \
+	vagrant ssh
+
+destroy_box:
+	cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant destroy -f
 
 clean_test:
 	vagrant box remove testing-docker-box || true
