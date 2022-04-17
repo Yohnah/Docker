@@ -1,0 +1,16 @@
+name: Re-build and upload all docker versions boxes
+on:
+  workflow_dispatch:
+
+env:
+  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+
+jobs:
+  ReBuiltandUpload:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Rebuilding and uploading all docker versions
+        run: sh rebuild-and-upload-all-docker-versions.sh
+ 
