@@ -6,7 +6,7 @@ echo $ALL_DOCKER_VERSIONS | sed "s/ /\n/g" | while read VERSION;
 do
     make version CURRENT_DOCKER_VERSION=$VERSION
     make build CURRENT_DOCKER_VERSION=$VERSION
-    make test
-    make upload
-    make clean
+    make test CURRENT_DOCKER_VERSION=$VERSION
+    make upload CURRENT_DOCKER_VERSION=$VERSION
+    make clean CURRENT_DOCKER_VERSION=$VERSION
 done
