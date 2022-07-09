@@ -17,8 +17,12 @@ version:
 	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
-	@echo Build cannot be launched
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
+	@echo Not a new docker version exists, so, build cannot be launched
 	exit 1
+else
+	@echo New docker versions exists, build job can be launched
+	exit 0
 
 requirements:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
