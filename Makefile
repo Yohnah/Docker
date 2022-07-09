@@ -23,6 +23,7 @@ ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(C
 else
 	@echo New docker versions exists, build job can be launched
 	exit 0
+endif
 
 requirements:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
