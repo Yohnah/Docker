@@ -17,7 +17,8 @@ version:
 	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
-	exit 0
+	@echo Build cannot be launched
+	exit 1
 
 requirements:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
