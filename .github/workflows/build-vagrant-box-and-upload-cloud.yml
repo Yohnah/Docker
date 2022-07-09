@@ -8,6 +8,11 @@ env:
   VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
 
 jobs:
+  Checkifbuild:
+    runs-on: ubuntu-20.04
+    step:
+    - name: Check the current and new vagrant box version
+      run: make version
   BuiltandUpload:
     runs-on: macos-12
     steps:
@@ -15,8 +20,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Preparing runner
         run: make requirements
-      - name: Check the current and new vagrant box version
-        run: make version
       - name: Build the vagrant box
         run: make build
       - name: Test if vagrant box was correctly built
