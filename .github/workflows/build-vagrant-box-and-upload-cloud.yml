@@ -14,7 +14,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Preparing runner
-        run: brew install vagrant
+        run: make requirements
       - name: Check the current and new vagrant box version
         run: make version
       - name: Build the vagrant box

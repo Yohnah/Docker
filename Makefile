@@ -18,6 +18,13 @@ version:
 	@echo "========================="
 	@echo ""
 
+requirements:
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
+	@echo Nothing to do
+else
+	brew install vagrant
+endif
+
 build:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Nothing to do
