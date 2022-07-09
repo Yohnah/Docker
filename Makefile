@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
 
-.PHONY: all check version requirements build load_box destroy_box test clean_test upload clean
+.PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
 all: version build test
 
@@ -17,8 +17,6 @@ version:
 	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
-
-	exit 1
 
 requirements:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
