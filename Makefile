@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
 
-.PHONY: all version build load_box destroy_box test clean_test upload clean
+.PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
 all: version build test
 
