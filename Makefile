@@ -17,13 +17,13 @@ version:
 	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
-	ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
-		@echo Build won't be launched
-		exit 1
-	else
-		@echo Build can be launched
-		exit 0
-	endif
+ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
+	@echo Build won't be launched
+	exit 1
+else
+	@echo Build can be launched
+	exit 0
+endif
 
 requirements:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
