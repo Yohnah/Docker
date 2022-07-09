@@ -19,7 +19,7 @@ version:
 	@echo ""
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Not a new docker version exists, so, build cannot be launched
-	exit 1
+	exit 0
 else
 	@echo New docker versions exists, build job can be launched
 	exit 0
