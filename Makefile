@@ -18,7 +18,7 @@ version:
 	@echo "========================="
 	@echo ""
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
-	@echo Build won't be launched
+	@echo Build wowill not be launched
 	exit 1
 else
 	@echo Build can be launched
