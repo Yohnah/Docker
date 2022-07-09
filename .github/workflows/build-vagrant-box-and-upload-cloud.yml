@@ -10,14 +10,17 @@ env:
 jobs:
   Checkifbuild:
     runs-on: ubuntu-20.04
+    outputs:
+      verdict: ${{ setps.version.outputs.verdict }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
       - name: Check the current and new vagrant box version
-        run: make version
+        run: make version && echo ":: set-output name=verdict::true" || ":: set-output name=verdict::false"
   BuiltandUpload:
     runs-on: macos-12
     needs: Checkifbuild
+    if: needs.Checkifbuild.outputs.verdict == 'true'
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
