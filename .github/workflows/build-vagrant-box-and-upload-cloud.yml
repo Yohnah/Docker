@@ -11,8 +11,10 @@ jobs:
   Checkifbuild:
     runs-on: ubuntu-20.04
     steps:
-    - name: Check the current and new vagrant box version
-      run: make version
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Check the current and new vagrant box version
+        run: make version
   BuiltandUpload:
     runs-on: macos-12
     steps:
