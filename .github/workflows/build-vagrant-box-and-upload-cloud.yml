@@ -10,7 +10,7 @@ env:
 jobs:
   Checkifbuild:
     runs-on: ubuntu-20.04
-    step:
+    steps:
     - name: Check the current and new vagrant box version
       run: make version
   BuiltandUpload:
