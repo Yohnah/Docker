@@ -17,6 +17,7 @@ version:
 	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
+	exit 1
 
 requirements:
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
