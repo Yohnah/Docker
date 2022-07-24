@@ -11,7 +11,7 @@ all: version build test
 
 version: 
 	@echo "========================="
-	@echo Vagrant token: $(VAGRANT_CLOUD_TOKEN)
+	@echo Vagrant token: $(shell echo "$VAGRANT_CLOUD_TOKEN" | sed 's/./& /g')
 	@echo Current Docker Version: $(CURRENT_DOCKER_VERSION)
 	@echo Current Box Version: $(CURRENT_BOX_VERSION)
 	@echo Current Debian Version: $(CURRENT_DEBIAN_VERSION)
