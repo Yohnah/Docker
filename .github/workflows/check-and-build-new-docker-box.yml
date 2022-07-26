@@ -17,7 +17,3 @@ jobs:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
       debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
   
-  TestBoxBuilt:
-    needs: [CheckifNewDockerExist,BuildDockerBox]
-    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
-    
