@@ -5,9 +5,15 @@ on:
     - cron: '0 1 * * *'
   workflow_dispatch:
 
-env:
-  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-
 jobs:
   CheckifNewDockerExist:
-    uses: Yohnah-org/Docker/.github/workflows/check-if-new-docker-version-exist--reusable.yml@setup-workflows-actions
+    uses: ./.github/workflows/check-if-new-docker-version-exist--reusable.yml
+  
+  BuildDockerBox:
+    needs: CheckifNewDockerExist
+    if: needs.CheckifNewDockerExist.outputs.verdict
+    uses: ./.github/workflows/build-docker-box--reusable.yml
+    with:
+      dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerversion}}
+      debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianversion}}
+    secrets: inherit
