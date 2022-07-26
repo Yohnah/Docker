@@ -1,0 +1,13 @@
+name: Check and build new docker box
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+env:
+  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+
+jobs:
+  CheckifNewDockerExist:
+    uses: Yohnah-org/Docker/.github/workflows/check-if-new-docker-version-exist--reusable.yml@setup-workflows-actions
