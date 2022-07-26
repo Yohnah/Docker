@@ -11,7 +11,7 @@ jobs:
   
   BuildDockerBox:
     needs: CheckifNewDockerExist
-    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
+    if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
     uses: ./.github/workflows/build-docker-box--reusable.yml
     with:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
@@ -19,7 +19,7 @@ jobs:
     
   UploadBox:
     needs: [CheckifNewDockerExist,BuildDockerBox]
-    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
+    if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
     uses: ./.github/workflows/upload-box--reusable.yml
     with:
       boxFile: ${{ needs.BuildDockerBox.outputs.boxFile}}
