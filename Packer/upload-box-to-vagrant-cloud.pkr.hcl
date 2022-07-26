@@ -31,7 +31,7 @@ build {
 
   post-processors {
     post-processor "artifice" {
-      files = var.box-to-upload
+      files = [var.box-to-upload]
     }
     post-processor "vagrant-cloud" {
       box_tag      = "Yohnah/Docker"
