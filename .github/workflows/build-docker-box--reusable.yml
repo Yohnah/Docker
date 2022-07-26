@@ -12,19 +12,22 @@ on:
     outputs:
       ManifestFile:
         description: "The resulted packer manifest file"
-        value: ${{ jobs.buildDocker.outputs.ManifestFile}}
-
-env:
-  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+        value: ${{ jobs.buildDocker.outputs.ManifestFile }}
+      boxFile:
+        description: "The resulted box file path"
+        value: ${{ jobs.buildDocker.outputs.boxFile }}
 
 jobs:
   buildDocker:
     runs-on: self-hosted-1
     outputs:
       ManifestFile: ${{ steps.build.outputs.manifestfile}}
+      boxFile: ${{ steps.build.outputs.boxfile}}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
       - name: Cleaning previous artifacts
         run: make clean
       - name: Build the vagrant box
@@ -37,5 +40,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
       - name: Testing the vagrant box
         run: make test MANIFESTFILE=${{ needs.buildDocker.outputs.ManifestFile }}

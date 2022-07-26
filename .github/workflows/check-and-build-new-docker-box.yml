@@ -16,3 +16,13 @@ jobs:
     with:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
       debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
+    
+  UploadBox:
+    needs: [CheckifNewDockerExist,BuildDockerBox]
+    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
+    uses: ./.github/workflows/upload-box--reusable.yml
+    with:
+      boxFile: ${{ needs.BuildDockerBox.outputs.boxFile}}
+      dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
+      debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}} 
+    secrets: inherit

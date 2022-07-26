@@ -12,5 +12,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
       - name: Testing the vagrant box
         run: make test MANIFESTFILE=${{ inputs.ManifestFile }}
