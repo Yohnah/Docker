@@ -4,6 +4,7 @@ CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/c
 OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
+MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/manifest.json
 
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
@@ -17,6 +18,9 @@ version:
 	@echo Provider: $(PROVIDER)
 	@echo "========================="
 	@echo ""
+	@echo ::set-output name=dockerversion::$(CURRENT_DOCKER_VERSION)
+	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
+	@echo ""
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Not a new docker version exists, so, build cannot be launched
 	exit 1
@@ -25,14 +29,12 @@ else
 	exit 0
 endif
 
-requirements:
-	brew install vagrant
-
 build:
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
-
+	@echo ::set-output name=manifestfile::$(OUTPUT_DIRECTORY)/packer-build/manifest.json
+	
 test:
-	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
+	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
 	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant provision; \
@@ -53,7 +55,7 @@ clean_test:
 	rm -fr $(OUTPUT_DIRECTORY)/vagrant-docker-test || true
 
 upload:
-	cd Packer; packer build -var "input_directory=$(OUTPUT_DIRECTORY)" -var "version=$(CURRENT_DOCKER_VERSION)" -var "version_description=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
+	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 
 clean: clean_test
 	rm -fr $(OUTPUT_DIRECTORY)/packer-build || true

@@ -1,12 +1,16 @@
-variable "input_directory" {
-    type = string
+variable "box-to-upload" {
+  type = string
 }
 
-variable "version" {
-    type = string
+variable "docker_version" {
+  type = string
 }
 
-variable "version_description"{
+variable "debian_version" {
+  type = string
+}
+
+variable "builtDateTime"{
   type = string
 }
 
@@ -14,29 +18,25 @@ variable "provider"{
   type = string
 }
 
-locals {
-    vm_name = "docker"
-    box_files = [
-            "${var.input_directory}/packer-build/output/boxes/${local.vm_name}/${var.version}/${var.provider}/docker.box"
-    ]
-}
-
-source "null" "docker" {
+source "null" "upload" {
   communicator = "none"
 }
 
 build {
-  sources = ["source.null.docker"]
+  sources = ["source.null.upload"]
 
   post-processors {
     post-processor "artifice" {
-      files = local.box_files
+      files = [var.box-to-upload]
     }
     post-processor "vagrant-cloud" {
-      box_tag      = "Yohnah/Docker"
+      box_tag = "Yohnah/Docker"
       keep_input_artifact = false
-      version      = var.version
-      version_description = "Built at ${var.version_description}"
+      version = var.docker_version
+      version_description = <<EOF
+        Built at ${var.builtDateTime}
+        Debian version: ${var.debian_version}
+      EOF
     }
   }
 }

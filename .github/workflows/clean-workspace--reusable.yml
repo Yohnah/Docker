@@ -1,0 +1,14 @@
+name: Test created box
+on: 
+  workflow_call:  
+
+jobs:
+  testbox:
+    runs-on: self-hosted-1
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Cleaning workspace
+        run: make clean
