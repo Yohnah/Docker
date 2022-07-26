@@ -11,7 +11,7 @@ jobs:
   
   BuildDockerBox:
     needs: CheckifNewDockerExist
-    if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
+    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
     uses: ./.github/workflows/build-docker-box--reusable.yml
     with:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
