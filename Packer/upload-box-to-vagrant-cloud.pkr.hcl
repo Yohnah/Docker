@@ -37,10 +37,10 @@ build {
       box_tag      = "Yohnah/Docker"
       keep_input_artifact = false
       version      = var.docker_version
-      version_description = " \
-      Built at ${var.version_description} \
-      Debian version: ${var.debian_version} \
-      "
+      version_description = <<EOF
+      Built at ${var.version_description} 
+      Debian version: ${var.debian_version}
+      EOF
     }
   }
 }
