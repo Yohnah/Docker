@@ -4,6 +4,7 @@ CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/c
 OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
+MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/manifest.json
 
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
@@ -28,14 +29,11 @@ else
 	exit 0
 endif
 
-requirements:
-	brew install vagrant
-
 build:
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
-
+	@echo ::set-output name=manifestfile::$(OUTPUT_DIRECTORY)/packer-build/manifest.json
 test:
-	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
+	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
 	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant provision; \

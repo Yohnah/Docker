@@ -2,21 +2,15 @@ name: Test created box
 on: 
   workflow_call:  
     inputs:
-      dockerVersion:
+      ManifestFile:
         required: true
         type: string
-      debianVersion:
-        required: true
-        type: string
-
-env:
-  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
 
 jobs:
-  buildDocker:
+  testbox:
     runs-on: self-hosted-1
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: Build the vagrant box
-        run: make build CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}
+      - name: Testing the vagrant box
+        run: make test MANIFESTFILE=${{ inputs.ManifestFile }}

@@ -9,6 +9,10 @@ on:
       debianVersion:
         required: true
         type: string
+    outputs:
+      ManifestFile:
+        description: "The resulted packer manifest file"
+        value: ${{ jobs.buildDocker.outputs.ManifestFile}}
 
 env:
   VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
@@ -16,8 +20,13 @@ env:
 jobs:
   buildDocker:
     runs-on: self-hosted-1
+    outputs:
+      ManifestFile: ${{ steps.build.outputs.manifestfile}}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+      - name: Cleaning previous artifacts
+        run: make clean
       - name: Build the vagrant box
+        id: build
         run: make build CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}
