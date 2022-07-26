@@ -26,3 +26,7 @@ jobs:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
       debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}} 
     secrets: inherit
+
+  CleanAll:
+    needs: [CheckifNewDockerExist,BuildDockerBox,UploadBox]
+    uses: ./.github/workflows/clean-workspace--reusable.yml
