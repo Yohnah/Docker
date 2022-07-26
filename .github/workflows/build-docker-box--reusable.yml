@@ -30,3 +30,12 @@ jobs:
       - name: Build the vagrant box
         id: build
         run: make build CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}
+  
+  testCreatedBox:
+    runs-on: self-hosted-1
+    needs: buildDocker
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Testing the vagrant box
+        run: make test MANIFESTFILE=${{ needs.buildDocker.outputs.ManifestFile }}

@@ -16,10 +16,3 @@ jobs:
     with:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
       debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
-
-  TestCreatedBox:
-    needs: [CheckifNewDockerExist, BuildDockerBox]
-    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
-    uses: ./.github/workflows/test-created-box--reusable.yml
-    with:
-      ManifestFile: ${{ needs.BuildDockerBox.outputs.ManifestFile}}
