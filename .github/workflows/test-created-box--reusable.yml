@@ -1,5 +1,4 @@
-name: Build docker box
-
+name: Test created box
 on: 
   workflow_call:  
     inputs:

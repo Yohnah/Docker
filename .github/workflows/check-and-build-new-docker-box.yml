@@ -16,4 +16,8 @@ jobs:
     with:
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
       debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
-    secrets: inherit
+  
+  TestBoxBuilt:
+    needs: [CheckifNewDockerExist,BuildDockerBox]
+    if: needs.CheckifNewDockerExist.outputs.verdict == 'false'
+    

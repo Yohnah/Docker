@@ -232,6 +232,9 @@ build {
           output = "${var.output_directory}/packer-build/output/boxes/${local.vm_name}/${var.docker_version}/{{.Provider}}/{{.BuildName}}.box"
           vagrantfile_template = "${path.root}/vagrantfile.rb"
         }
+        post-processor "manifest" {
+            output = "${var.output_directory}/packer-build/manifest.json"
+        }
     }
 
 }
