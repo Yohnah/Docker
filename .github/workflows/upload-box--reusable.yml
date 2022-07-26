@@ -2,7 +2,7 @@ name: Upload the created box to Vagrant Cloud
 on: 
   workflow_call:
     inputs:
-      boxFile:
+      ManifestFile:
         required: true
         type: string
       dockerVersion:
@@ -28,4 +28,4 @@ jobs:
           ref: ${{ github.ref }}
       - name: Upload
         id: version
-        run: make upload BOXFILE=${{ inputs.boxFile }} CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}
+        run: make upload MANIFESTFILE=${{ inputs.ManifestFile }} CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}

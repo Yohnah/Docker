@@ -13,16 +13,12 @@ on:
       ManifestFile:
         description: "The resulted packer manifest file"
         value: ${{ jobs.buildDocker.outputs.ManifestFile }}
-      boxFile:
-        description: "The resulted box file path"
-        value: ${{ jobs.buildDocker.outputs.boxFile }}
 
 jobs:
   buildDocker:
     runs-on: self-hosted-1
     outputs:
       ManifestFile: ${{ steps.build.outputs.manifestfile}}
-      boxFile: ${{ steps.build.outputs.boxfile}}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -33,7 +29,7 @@ jobs:
       - name: Build the vagrant box
         id: build
         run: make build CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}
-  
+
   testCreatedBox:
     runs-on: self-hosted-1
     needs: buildDocker

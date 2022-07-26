@@ -5,7 +5,6 @@ OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
 MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/manifest.json
-BOXFILE := $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
 
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
@@ -33,7 +32,7 @@ endif
 build:
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
 	@echo ::set-output name=manifestfile::$(OUTPUT_DIRECTORY)/packer-build/manifest.json
-	@echo ::set-output name=boxfile::$(shell cat $(OUTPUT_DIRECTORY)/packer-build/manifest.json | jq ".builds | .[].files | .[].name")
+	
 test:
 	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
 	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
@@ -56,7 +55,7 @@ clean_test:
 	rm -fr $(OUTPUT_DIRECTORY)/vagrant-docker-test || true
 
 upload:
-	cd Packer; packer build -var "box-to-upload=$(BOXFILE)" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
+	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 
 clean: clean_test
 	rm -fr $(OUTPUT_DIRECTORY)/packer-build || true

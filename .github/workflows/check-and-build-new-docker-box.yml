@@ -22,7 +22,7 @@ jobs:
     if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
     uses: ./.github/workflows/upload-box--reusable.yml
     with:
-      boxFile: ${{ needs.BuildDockerBox.outputs.boxFile}}
+      ManifestFile: ${{ needs.BuildDockerBox.outputs.ManifestFile}}
       dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
       debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}} 
     secrets: inherit
