@@ -19,6 +19,7 @@ version:
 	@echo ""
 	@echo ::set-output name=dockerversion::$(CURRENT_DOCKER_VERSION)
 	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
+	@echo ""
 ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
 	@echo Not a new docker version exists, so, build cannot be launched
 	exit 1
