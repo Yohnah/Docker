@@ -1,4 +1,4 @@
-name: Test created box
+name: Clean all
 on: 
   workflow_call:  
 
