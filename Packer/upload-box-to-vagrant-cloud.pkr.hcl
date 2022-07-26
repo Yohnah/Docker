@@ -38,7 +38,7 @@ build {
       keep_input_artifact = false
       version      = var.docker_version
       version_description = <<EOF
-      Built at ${var.version_description} 
+      Built at ${var.builtDateTime} 
       Debian version: ${var.debian_version}
       EOF
     }
