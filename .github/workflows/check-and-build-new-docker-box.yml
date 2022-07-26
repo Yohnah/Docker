@@ -11,9 +11,9 @@ jobs:
   
   BuildDockerBox:
     needs: CheckifNewDockerExist
-    if: needs.CheckifNewDockerExist.outputs.verdict
+    if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
     uses: ./.github/workflows/build-docker-box--reusable.yml
     with:
-      dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerversion}}
-      debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianversion}}
+      dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
+      debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
     secrets: inherit
