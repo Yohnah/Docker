@@ -18,29 +18,25 @@ variable "provider"{
   type = string
 }
 
-locals {
-    vm_name = "docker"
-}
-
-source "null" "docker" {
+source "null" "upload" {
   communicator = "none"
 }
 
 build {
-  sources = ["source.null.docker"]
+  sources = ["source.null.upload"]
 
   post-processors {
     post-processor "artifice" {
       files = [var.box-to-upload]
     }
     post-processor "vagrant-cloud" {
-      box_tag      = "Yohnah/Docker"
+      box_tag = "Yohnah/Docker"
       keep_input_artifact = false
-      version      = var.docker_version
+      version = var.docker_version
       version_description = <<EOF
-Built at ${var.builtDateTime} 
-Debian version: ${var.debian_version}
-EOF
+        Built at ${var.builtDateTime}
+        Debian version: ${var.debian_version}
+      EOF
     }
   }
 }
