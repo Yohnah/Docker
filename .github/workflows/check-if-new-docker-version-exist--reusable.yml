@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
       - name: Check if new docker veresion exist
         id: version
         run: make version && "::set-output name=verdict::true" || echo "::set-output name=verdict::false"
