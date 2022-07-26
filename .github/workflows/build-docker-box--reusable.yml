@@ -1,0 +1,26 @@
+name: Build docker box
+
+on: 
+  workflow_call:  
+    inputs:
+      dockerVersion:
+        required: true
+        type: string
+      debianVersion:
+        required: true
+        type: string
+    secrets:
+      VAGRANT_CLOUD_TOKEN:
+        required: true
+
+env:
+  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+
+jobs:
+  buildDocker:
+    runs-on: self-hosted-1
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Build the vagrant box
+        run: make build CURRENT_DOCKER_VERSION=${{ inputs.dockerVersion }} CURRENT_DEBIAN_VERSION=${{ inputs.debianVersion }}
