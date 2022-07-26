@@ -10,3 +10,5 @@ do
     make upload CURRENT_DOCKER_VERSION=$VERSION
     make clean CURRENT_DOCKER_VERSION=$VERSION
 done
+
+#curl -s https://docs.docker.com/engine/release-notes/ | grep -i 'nomunge' | grep -v 'Version' | grep -v '<ul>' | sed -e 's/<[^>]*>//g' | sed 's/ //g' | tr '\n' ',' | sed 's/,$//g' 
