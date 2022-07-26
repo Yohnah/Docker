@@ -1,4 +1,5 @@
-name: Clean all
+name: Clean All
+
 on: 
   workflow_call:  
 
