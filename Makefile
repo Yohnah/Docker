@@ -10,6 +10,12 @@ MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/manifest.json
 
 all: version build test
 
+getDockerVersions:
+	@echo ::set-output name=versions::$(shell curl -s https://docs.docker.com/engine/release-notes/ | grep -i 'nomunge' | grep -v 'Version' | grep -v '<ul>' | sed -e 's/<[^>]*>//g' | sed 's/ //g' | jq -ncR '[inputs]' )
+
+deleteVersion:
+	vagrant cloud version delete -f Yohnah/Docker $(VERSION)
+
 version: 
 	@echo "========================="
 	@echo Current Docker Version: $(CURRENT_DOCKER_VERSION)
