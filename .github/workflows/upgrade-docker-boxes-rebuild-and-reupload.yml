@@ -8,6 +8,16 @@ jobs:
   GetAllDockerReleasesVersions:
     uses: ./.github/workflows/get-docker-releases-versions.yml
   
+  UpgradingBoxes:
+    needs: GetAllDockerReleasesVersions
+    strategy:
+      matrix:
+        version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
+    
+  steps:
+      - name: Deleting box version ${{ matrix.version }}
+        run: echo ${{ matrix.version }}
+
   # BuildDockerBox:
   #   needs: CheckifNewDockerExist
   #   if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
