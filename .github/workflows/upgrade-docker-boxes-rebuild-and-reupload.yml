@@ -4,6 +4,9 @@ on:
     - cron: '0 3 1 * *'
   workflow_dispatch:
 
+env:
+  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+
 jobs:
   GetAllDockerReleasesVersions:
     uses: ./.github/workflows/get-docker-releases-versions.yml
