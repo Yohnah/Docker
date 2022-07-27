@@ -1,4 +1,6 @@
 name: Get Docker releases versions
+
+on: 
   workflow_call:  
     outputs:
       versions:
