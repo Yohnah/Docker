@@ -11,7 +11,8 @@ MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/manifest.json
 all: version build test
 
 getDockerVersions:
-	@echo ::set-output name=versions::$(shell (curl -s https://docs.docker.com/engine/release-notes/ | grep -i 'nomunge' | grep -v 'Version' | grep -v '<ul>' | sed -e 's/<[^>]*>//g' | sed 's/ //g' | jq -ncR '[inputs]')
+	@echo \"prueba1\",\"prueba2\"
+	@echo ::set-output name=versions::$(shell (curl -s https://docs.docker.com/engine/release-notes/ | grep -i 'nomunge' | grep -v 'Version' | grep -v '<ul>' | sed -e 's/<[^>]*>//g' | sed 's/ //g' | jq -ncR '[inputs]' | sed 's/"/\\"/g'))
 
 deleteVersion:
 	vagrant cloud version delete -f Yohnah/Docker $(VERSION)
@@ -61,7 +62,7 @@ clean_test:
 	rm -fr $(OUTPUT_DIRECTORY)/vagrant-docker-test || true
 
 upload:
-	vagrant cloud box create --no-private Yohnah/Docker
+	vagrant cloud box create --no-private Yohnah/Docker || true
 	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 
 clean: clean_test
