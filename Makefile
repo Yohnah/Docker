@@ -49,7 +49,7 @@ test:
 	vagrant destroy -f 
 
 load_box:
-	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
+	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')
 	mkdir -p $(OUTPUT_DIRECTORY)/$(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant ssh

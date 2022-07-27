@@ -11,7 +11,7 @@ variable "debian_version" {
 }
 
 locals {
-    vm_name = "docker"
+    vm_name = "docker-${var.docker_version}"
     debian_version = var.debian_version
     docker_version = var.docker_version
     http_directory = "${path.root}/http"
