@@ -13,8 +13,7 @@ jobs:
     strategy:
       matrix:
         version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
-    
-  steps:
+    steps:
       - name: Deleting box version ${{ matrix.version }}
         run: echo ${{ matrix.version }}
 
