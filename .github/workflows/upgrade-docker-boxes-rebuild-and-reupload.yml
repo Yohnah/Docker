@@ -12,30 +12,17 @@ jobs:
     runs-on: self-hosted-1
     needs: GetAllDockerReleasesVersions
     strategy:
+      max-parallel: 1
       matrix:
         version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
     steps:
       - name: Deleting box version ${{ matrix.version }}
-        run: echo ${{ matrix.version }}
-
-  # BuildDockerBox:
-  #   needs: CheckifNewDockerExist
-  #   if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
-  #   uses: ./.github/workflows/build-docker-box--reusable.yml
-  #   with:
-  #     dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
-  #     debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
-    
-  # UploadBox:
-  #   needs: [CheckifNewDockerExist,BuildDockerBox]
-  #   if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
-  #   uses: ./.github/workflows/upload-box--reusable.yml
-  #   with:
-  #     ManifestFile: ${{ needs.BuildDockerBox.outputs.ManifestFile}}
-  #     dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
-  #     debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}} 
-  #   secrets: inherit
-
-  # CleanAll:
-  #   needs: [CheckifNewDockerExist,BuildDockerBox,UploadBox]
-  #   uses: ./.github/workflows/clean-workspace--reusable.yml
+        run: make deleteVersion VERSION=${{ matrix.version }}
+      - name: Re-build docker box ${{ matrix.version }}
+        run: make build CURRENT_DOCKER_VERSION=${{ matrix.version }}
+      - name: Test docker box ${{ matrix.version }}
+        run: make test CURRENT_DOCKER_VERSION=${{ matrix.version }}
+      - name: Upload docker box to vagrant cloud ${{ matrix.version }}
+        run: make upload CURRENT_DOCKER_VERSION=${{ matrix.version }}
+      - name: Clean docker box ${{ matrix.version }}
+        run: make clean CURRENT_DOCKER_VERSION=${{ matrix.version }}

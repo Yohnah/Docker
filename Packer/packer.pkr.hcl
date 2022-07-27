@@ -233,7 +233,7 @@ build {
           vagrantfile_template = "${path.root}/vagrantfile.rb"
         }
         post-processor "manifest" {
-            output = "${var.output_directory}/packer-build/manifest.json"
+            output = "${var.output_directory}/packer-build/${var.docker_version}/manifest.json"
         }
     }
 

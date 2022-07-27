@@ -4,7 +4,7 @@ CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/c
 OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
-MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/manifest.json
+MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/manifest.json
 
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
@@ -12,9 +12,10 @@ all: version build test
 
 getDockerVersions:
 	@echo ::set-output name=versions::$(shell (curl -s https://docs.docker.com/engine/release-notes/ | grep -i 'nomunge' | grep -v 'Version' | grep -v '<ul>' | sed -e 's/<[^>]*>//g' | sed 's/ //g' | jq -ncR '[inputs]' | sed 's/"/\\"/g'))
+	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
 
 deleteVersion:
-	vagrant cloud version delete -f Yohnah/Docker $(VERSION)
+	vagrant cloud version delete -f Yohnah/Docker $(VERSION) || true
 
 version: 
 	@echo "========================="
@@ -37,11 +38,11 @@ endif
 
 build:
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
-	@echo ::set-output name=manifestfile::$(OUTPUT_DIRECTORY)/packer-build/manifest.json
-	
+	@echo ::set-output name=manifestfile::$(MANIFESTFILE)
+
 test:
 	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
-	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
+	mkdir -p $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant provision; \
 	DOCKER_HOST="tcp://$(vagrant ssh-config | grep -i "HostName" | awk '{ print $2 }'):$(vagrant port --guest 2375)/" $(HOME)/.Yohnah/Docker/docker run hello-world; \
@@ -49,16 +50,16 @@ test:
 
 load_box:
 	vagrant box add -f --name "testing-docker-box" $(OUTPUT_DIRECTORY)/packer-build/output/boxes/docker/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/docker.box
-	mkdir -p $(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant init testing-docker-box; \
+	mkdir -p $(OUTPUT_DIRECTORY)/$(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant ssh
 
 destroy_box:
-	cd $(OUTPUT_DIRECTORY)/vagrant-docker-test; vagrant destroy -f
+	cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant destroy -f
 
 clean_test:
 	vagrant box remove testing-docker-box || true
-	rm -fr $(OUTPUT_DIRECTORY)/vagrant-docker-test || true
+	rm -fr $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test || true
 
 upload:
 	vagrant cloud box create --no-private Yohnah/Docker || true
