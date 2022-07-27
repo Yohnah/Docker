@@ -5,7 +5,7 @@ on:
     outputs:
       versions:
         description: "Docker releases versions list"
-        value: ${{ fromJSON(jobs.GetDockerVersionsList.outputs.versions) }}
+        value: ${{ fjobs.GetDockerVersionsList.outputs.versions }}
 
 jobs:
   GetDockerVersionsList:
