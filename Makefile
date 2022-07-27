@@ -6,6 +6,8 @@ DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
 MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/manifest.json
 
+mkdir -p $(OUTPUT_DIRECTORY)/tmp/packer-build/$(CURRENT_DOCKER_VERSION)
+
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean
 
 all: version build test
