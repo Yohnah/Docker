@@ -62,7 +62,6 @@ clean_test:
 	rm -fr $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test || true
 
 upload:
-	vagrant cloud box create --no-private Yohnah/Docker || true
 	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 
 clean: clean_test
