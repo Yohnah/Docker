@@ -6,9 +6,7 @@ DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
 MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/manifest.json
 
-mkdir -p $(OUTPUT_DIRECTORY)/tmp/packer-build/$(CURRENT_DOCKER_VERSION)
-
-.PHONY: all version requirements build load_box destroy_box test clean_test upload clean
+.PHONY: all version requirements build load_box destroy_box test clean_test upload clean getDockerVersions deleteVersion
 
 all: version build test
 
@@ -39,6 +37,7 @@ else
 endif
 
 build:
+	mkdir -p $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
 	@echo ::set-output name=manifestfile::$(MANIFESTFILE)
 
