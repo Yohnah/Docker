@@ -19,6 +19,10 @@ jobs:
       matrix:
         version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
       - name: Deleting box version ${{ matrix.version }}
         run: make deleteVersion VERSION=${{ matrix.version }}
       - name: Re-build docker box ${{ matrix.version }}
