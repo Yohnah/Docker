@@ -1,0 +1,31 @@
+name: Upgrade Docker boxes
+on:
+  schedule:
+    - cron: '0 3 1 * *'
+  workflow_dispatch:
+
+jobs:
+  GetAllDockerReleasesVersions:
+    uses: ./.github/workflows/get-docker-releases-versions.yml
+  
+  # BuildDockerBox:
+  #   needs: CheckifNewDockerExist
+  #   if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
+  #   uses: ./.github/workflows/build-docker-box--reusable.yml
+  #   with:
+  #     dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
+  #     debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}}
+    
+  # UploadBox:
+  #   needs: [CheckifNewDockerExist,BuildDockerBox]
+  #   if: needs.CheckifNewDockerExist.outputs.verdict == 'true'
+  #   uses: ./.github/workflows/upload-box--reusable.yml
+  #   with:
+  #     ManifestFile: ${{ needs.BuildDockerBox.outputs.ManifestFile}}
+  #     dockerVersion: ${{ needs.CheckifNewDockerExist.outputs.dockerVersion}}
+  #     debianVersion: ${{ needs.CheckifNewDockerExist.outputs.debianVersion}} 
+  #   secrets: inherit
+
+  # CleanAll:
+  #   needs: [CheckifNewDockerExist,BuildDockerBox,UploadBox]
+  #   uses: ./.github/workflows/clean-workspace--reusable.yml

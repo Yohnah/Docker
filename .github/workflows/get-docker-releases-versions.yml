@@ -1,0 +1,20 @@
+name: Get Docker releases versions
+  workflow_call:  
+    outputs:
+      versions:
+        description: "Docker releases versions list"
+        value: ${{ jobs.GetDockerVersionsList.outputs.versions }}
+
+jobs:
+  GetDockerVersionsList:
+    runs-on: ubuntu-20.04
+    outputs:
+      Versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Get Docker releases versions list
+        id: versions
+        run: make getDockerVersions
