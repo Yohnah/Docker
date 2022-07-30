@@ -4,7 +4,7 @@ CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/c
 OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
-MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/manifest.json
+MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/manifest.json
 
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean getDockerVersions deleteVersion
 

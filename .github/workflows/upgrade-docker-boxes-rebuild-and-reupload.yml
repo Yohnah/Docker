@@ -17,7 +17,8 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
+        #version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
+        version: [20.10.17]
         provider: [virtualbox,vmware,parallels]
     steps:
       - name: Check out repository code
@@ -26,9 +27,9 @@ jobs:
           ref: ${{ github.ref }}
       - name: Re-build docker box ${{ matrix.version }} on ${{ matrix.provider }} provider
         run: make build CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
-      - name: Deleting box version ${{ matrix.version }} on ${{ matrix.provider }} provider
-        run: make deleteVersion VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
-      - name: Upload docker box to vagrant cloud ${{ matrix.version }} on ${{ matrix.provider }} provider
-        run: make upload CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
-      - name: Clean docker box ${{ matrix.version }} on ${{ matrix.provider }} provider
-        run: make clean CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+      #- name: Deleting box version ${{ matrix.version }} on ${{ matrix.provider }} provider
+      #  run: make deleteVersion VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+      #- name: Upload docker box to vagrant cloud ${{ matrix.version }} on ${{ matrix.provider }} provider
+      #  run: make upload CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+      #- name: Clean docker box ${{ matrix.version }} on ${{ matrix.provider }} provider
+      #  run: make clean CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
