@@ -4,7 +4,7 @@ CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/c
 OUTPUT_DIRECTORY := /tmp
 DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
 PROVIDER := virtualbox
-MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/manifest.json
+MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)/manifest.json
 
 .PHONY: all version requirements build load_box destroy_box test clean_test upload clean getDockerVersions deleteVersion
 
@@ -15,7 +15,7 @@ getDockerVersions:
 	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
 
 deleteVersion:
-	vagrant cloud version delete -f Yohnah/Docker $(VERSION) || true
+	vagrant cloud provider delete -f Yohnah/Docker $(PROVIDER) $(VERSION) || true
 
 version: 
 	@echo "========================="
@@ -42,7 +42,7 @@ build:
 	@echo ::set-output name=manifestfile::$(MANIFESTFILE)
 
 test:
-	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
+	vagrant box add --provider $(PROVIDER) -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
 	mkdir -p $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant provision; \
@@ -50,7 +50,7 @@ test:
 	vagrant destroy -f 
 
 load_box:
-	vagrant box add -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')
+	vagrant box add --provider $(PROVIDER) -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')
 	mkdir -p $(OUTPUT_DIRECTORY)/$(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
 	vagrant up --provider $(PROVIDER); \
 	vagrant ssh
@@ -59,7 +59,7 @@ destroy_box:
 	cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant destroy -f
 
 clean_test:
-	vagrant box remove testing-docker-box || true
+	vagrant box remove -f --provider $(PROVIDER) testing-docker-box || true
 	rm -fr $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test || true
 
 upload:

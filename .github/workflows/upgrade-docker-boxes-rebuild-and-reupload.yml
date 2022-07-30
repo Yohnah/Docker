@@ -18,18 +18,20 @@ jobs:
       max-parallel: 1
       matrix:
         version: ${{ fromJSON(needs.GetAllDockerReleasesVersions.outputs.versions) }}
+        include:
+          - provider: virtualbox
+          - provider: vmware
+          - provider: parallels
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
-      - name: Re-build docker box ${{ matrix.version }}
-        run: make build CURRENT_DOCKER_VERSION=${{ matrix.version }}
-      - name: Test docker box ${{ matrix.version }}
-        run: make test CURRENT_DOCKER_VERSION=${{ matrix.version }}
-      - name: Deleting box version ${{ matrix.version }}
-        run: make deleteVersion VERSION=${{ matrix.version }}
-      - name: Upload docker box to vagrant cloud ${{ matrix.version }}
-        run: make upload CURRENT_DOCKER_VERSION=${{ matrix.version }}
-      - name: Clean docker box ${{ matrix.version }}
-        run: make clean CURRENT_DOCKER_VERSION=${{ matrix.version }}
+      - name: Re-build docker box ${{ matrix.version }} on ${{ matrix.provider }} provider
+        run: make build CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+      - name: Deleting box version ${{ matrix.version }} on ${{ matrix.provider }} provider
+        run: make deleteVersion VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+      - name: Upload docker box to vagrant cloud ${{ matrix.version }} on ${{ matrix.provider }} provider
+        run: make upload CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+      - name: Clean docker box ${{ matrix.version }} on ${{ matrix.provider }} provider
+        run: make clean CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
