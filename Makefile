@@ -38,7 +38,7 @@ else
 endif
 
 build:
-	mkdir -p $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)
+	mkdir -p $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)
 	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
 	@echo ::set-output name=manifestfile::$(MANIFESTFILE)
 
@@ -65,8 +65,8 @@ clean_test:
 
 upload:
 	vagrant cloud box create --no-private Yohnah/Docker || true
-	vagrant cloud version update -d "Built at $(DATETIME) - Debian version: $(CURRENT_DEBIAN_VERSION)" Yohnah/Docker $(CURRENT_DOCKER_VERSION)
 	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
+	vagrant cloud version update -d "Built at $(DATETIME) - Debian version: $(CURRENT_DEBIAN_VERSION)" Yohnah/Docker $(CURRENT_DOCKER_VERSION)
 
 clean: clean_test
 	rm -fr $(OUTPUT_DIRECTORY)/packer-build || true
