@@ -15,6 +15,7 @@ getDockerVersions:
 	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
 
 deleteVersion:
+	vagrant cloud version update -d "uploading new boxes file now..."
 	vagrant cloud provider delete -f Yohnah/Docker $(PROVIDER) $(VERSION) || true
 
 version: 
@@ -64,6 +65,7 @@ clean_test:
 
 upload:
 	vagrant cloud box create --no-private Yohnah/Docker || true
+	vagrant cloud version update -d "Built at $(DATETIME) - Debian version: $(CURRENT_DEBIAN_VERSION)" Yohnah/Docker $(CURRENT_DOCKER_VERSION)
 	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
 
 clean: clean_test
