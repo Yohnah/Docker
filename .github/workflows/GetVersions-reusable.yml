@@ -29,6 +29,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
-      - name: Check if new docker veresion exist
+      - name: Check if new docker version exist
         id: versions
         run: make versions
