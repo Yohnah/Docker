@@ -10,11 +10,11 @@ on:
 jobs:
   GetVersions:
     uses: ./.github/workflows/GetVersions-reusable.yml
-    
+
   BuildDocker:
     needs: GetVersions
     uses:  ./.github/workflows/Build-Box-reusable.yml
     with:
-      dockerVersions: ${{ needs.GetVersions.dockerVersion }}
+      dockerVersions: ${{ input.Version }}
 
 

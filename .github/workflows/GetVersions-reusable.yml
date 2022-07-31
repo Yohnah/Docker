@@ -5,19 +5,19 @@ on:
     outputs:
       debianVersion:
         description: "The debian version to build the box"
-        value: ${{ jobs.GetVersions.outputs.debianversion }}
+        value: ${{ jobs.versions.outputs.debianversion }}
       dockerVersion: 
         description: "The docker version to build the box"
-        value: ${{ jobs.GetVersions.outputs.dockerversion }}
+        value: ${{ jobs.versions.outputs.dockerversion }}
       dockerreleases:
         description: "All docker released versions"
-        value: ${{ jobs.GetVersions.outputs.dockerreleases }}
+        value: ${{ jobs.versions.outputs.dockerreleases }}
       currentboxversion:
         description: "The current docker box version"
-        value: ${{ jobs.GetVersions.outputs.dockerreleases }}
+        value: ${{ jobs.versions.outputs.dockerreleases }}
 
 jobs:
-  GetVersions:
+  versions:
     runs-on: ubuntu-20.04
     outputs:
       debianversion: ${{ steps.versions.outputs.debianversion }}
