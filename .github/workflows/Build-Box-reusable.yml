@@ -14,8 +14,7 @@ jobs:
       max-parallel: 1
       matrix:
         provider: [virtualbox,vmware,parallels]
-        include:
-          - version: ${{ inputs.dockerVersions }}
+        version: ${{ fromJSON(inputs.dockerVersions) }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
