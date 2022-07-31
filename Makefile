@@ -20,9 +20,9 @@ versions:
 	@echo Current Debian Version: $(CURRENT_DEBIAN_VERSION)
 	@echo All Docker releases: $(ALLDOCKERRELEASES)
 	@echo "========================="
-	@echo ::set-output name=dockerversion::[\"$(CURRENT_DOCKER_VERSION)\"]
-	@echo ::set-output name=debianversion::[\"$(CURRENT_DEBIAN_VERSION)\"]
-	@echo ::set-output name=boxversion::[\"$(CURRENT_BOX_VERSION)\"]
+	@echo ::set-output name=dockerversion::$(CURRENT_DOCKER_VERSION)
+	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
+	@echo ::set-output name=boxversion::$(CURRENT_BOX_VERSION)
 	@echo ::set-output name=alldockerreleases::$(ALLDOCKERRELEASES)
 
 checkifbuild:

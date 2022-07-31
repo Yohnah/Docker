@@ -11,10 +11,19 @@ jobs:
   GetVersions:
     uses: ./.github/workflows/GetVersions-reusable.yml
 
+  ConcatStrings:
+    runs-on: self-hosted-1
+    outputs:
+      version: ${{ steps.build.outputs.version }}
+    steps:
+      - name: Create list to pass into BuildDocker job
+        run: echo ::set-output name=version::[${{ inputs.Version }}]
+
+
   BuildDocker:
-    needs: GetVersions
+    needs: [GetVersions, ConcatStrings]
     uses:  ./.github/workflows/Build-Box-reusable.yml
     with:
-      dockerVersions: [${{ inputs.Version }}]
+      dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
 
 
