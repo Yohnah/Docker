@@ -14,9 +14,10 @@ jobs:
   ConcatStrings:
     runs-on: self-hosted-1
     outputs:
-      version: ${{ steps.build.outputs.version }}
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Create list to pass into BuildDocker job
+        id: version
         run: echo ::set-output name=version::$( echo ${{ inputs.Version }} | jq -ncR '[inputs]')
 
 
