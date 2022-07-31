@@ -1,72 +1,56 @@
-CURRENT_BOX_VERSION := $(subst ", ,$(shell curl -sS "https://app.vagrantup.com/api/v1/box/Yohnah/Docker" | jq '.current_version.version'))
-CURRENT_DOCKER_VERSION := $(shell curl -s https://docs.docker.com/engine/release-notes/ | grep -i "nomunge" | grep -v "Version" | grep -v "<ul>" | head -n 1 | sed -e 's/<[^>]*>//g' | sed 's/ //g')
-CURRENT_DEBIAN_VERSION := $(shell curl -s https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/ | grep -oE "debian-(.*)-amd64-netinst.iso" | sed -e 's/<[^>]*>//g' | cut -d">" -f 1 | sed 's/"//g' | head -n 1 | cut -d- -f2)
-OUTPUT_DIRECTORY := /tmp
-DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
-PROVIDER := virtualbox
-MANIFESTFILE := $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/manifest.json
+export CURRENT_BOX_VERSION := $(shell TYPE=current_box_version sh ./makefile-resources/get-versions.sh)
+export CURRENT_DOCKER_VERSION := $(shell TYPE=current_docker_version sh ./makefile-resources/get-versions.sh)
+export CURRENT_DEBIAN_VERSION := $(shell TYPE=current_debian_version sh ./makefile-resources/get-versions.sh)
+export ALLDOCKERRELEASES := $(shell TYPE=all_docker_releases sh ./makefile-resources/get-versions.sh)
+export OUTPUT_DIRECTORY := /tmp
+export PACKER_DIRECTORY_OUTPUT := $(OUTPUT_DIRECTORY)/packer-build
+export DATETIME := $(shell date "+%Y-%m-%d %H:%M:%S")
+export PROVIDER := virtualbox
+export MANIFESTFILE := $(PACKER_DIRECTORY_OUTPUT)/$(CURRENT_DOCKER_VERSION)/manifest.json
+export UPLOADER_DIRECTORY := $(PACKER_DIRECTORY_OUTPUT)/toupload
 
-.PHONY: all version requirements build load_box destroy_box test clean_test upload clean getDockerVersions deleteVersion
+.PHONY: all versions checkifbuild requirements build test uploader clean done
 
-all: version build test
+all: versions build test done
 
-getDockerVersions:
-	@echo ::set-output name=versions::$(shell (curl -s https://docs.docker.com/engine/release-notes/ | grep -i 'nomunge' | grep -v 'Version' | grep -v '<ul>' | sed -e 's/<[^>]*>//g' | sed 's/ //g' | jq -ncR '[inputs]' | sed 's/"/\\"/g'))
-	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
-
-deleteVersion:
-	vagrant cloud version update -d "uploading new boxes file now..."
-	vagrant cloud provider delete -f Yohnah/Docker $(PROVIDER) $(VERSION) || true
-
-version: 
+versions:
 	@echo "========================="
 	@echo Current Docker Version: $(CURRENT_DOCKER_VERSION)
 	@echo Current Box Version: $(CURRENT_BOX_VERSION)
 	@echo Current Debian Version: $(CURRENT_DEBIAN_VERSION)
-	@echo Provider: $(PROVIDER)
+	@echo All Docker releases: $(ALLDOCKERRELEASES)
 	@echo "========================="
-	@echo ""
 	@echo ::set-output name=dockerversion::$(CURRENT_DOCKER_VERSION)
 	@echo ::set-output name=debianversion::$(CURRENT_DEBIAN_VERSION)
-	@echo ""
-ifeq ($(shell echo "$(CURRENT_DOCKER_VERSION)" | sed 's/ //g'),$(shell echo "$(CURRENT_BOX_VERSION)" | sed 's/ //g'))
-	@echo Not a new docker version exists, so, build cannot be launched
-	exit 1
-else
-	@echo New docker versions exists, build job can be launched
-	exit 0
-endif
+	@echo ::set-output name=boxversion::$(CURRENT_BOX_VERSION)
+	@echo ::set-output name=alldockerreleases::$(ALLDOCKERRELEASES)
 
-build:
-	mkdir -p $(OUTPUT_DIRECTORY)/packer-build/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)
-	cd packer; packer build -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "output_directory=/tmp" -only builder.$(PROVIDER)-iso.docker packer.pkr.hcl
+checkifbuild:
+	@echo "========================="
+	@echo New docker box must be built: $(shell CURRENT_DOCKER_VERSION=$(CURRENT_DOCKER_VERSION) CURRENT_BOX_VERSION=$(CURRENT_BOX_VERSION) TYPE=checkifbuild sh ./makefile-resources/get-versions.sh)
+	@echo "========================="
+	@echo ::set-output name=verdict::$(shell CURRENT_DOCKER_VERSION=$(CURRENT_DOCKER_VERSION) CURRENT_BOX_VERSION=$(CURRENT_BOX_VERSION) TYPE=checkifbuild sh ./makefile-resources/get-versions.sh)
+
+
+requirements:
+	mkdir -p $(PACKER_DIRECTORY_OUTPUT)/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)
+	mkdir -p $(PACKER_DIRECTORY_OUTPUT)/toupload
+	mkdir -p $(PACKER_DIRECTORY_OUTPUT)/test/$(CURRENT_DOCKER_VERSION)/$(PROVIDER)
+
+build: requirements
+	sh ./makefile-resources/build-docker-box.sh
 	@echo ::set-output name=manifestfile::$(MANIFESTFILE)
 
-test:
-	vagrant box add --provider $(PROVIDER) -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq ".builds | .[].files | .[].name")
-	mkdir -p $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
-	vagrant up --provider $(PROVIDER); \
-	vagrant provision; \
-	DOCKER_HOST="tcp://$(vagrant ssh-config | grep -i "HostName" | awk '{ print $2 }'):$(vagrant port --guest 2375)/" $(HOME)/.Yohnah/Docker/docker run hello-world; \
-	vagrant destroy -f 
+test: requirements
+	sh ./makefile-resources/test-created-box.sh
+	
 
-load_box:
-	vagrant box add --provider $(PROVIDER) -f --name "testing-docker-box" $(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')
-	mkdir -p $(OUTPUT_DIRECTORY)/$(OUTPUT_DIRECTORY)/vagrant-docker-test; cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant init testing-docker-box; \
-	vagrant up --provider $(PROVIDER); \
-	vagrant ssh
+done:
+	touch $(PACKER_DIRECTORY_OUTPUT)/toupload/done
 
-destroy_box:
-	cd $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test; vagrant destroy -f
+uploader:
+	sh ./makefile-resources/uploader-boxes-daemon.sh
 
-clean_test:
-	vagrant box remove -f --provider $(PROVIDER) testing-docker-box || true
-	rm -fr $(OUTPUT_DIRECTORY)/$(CURRENT_DOCKER_VERSION)/vagrant-docker-test || true
 
-upload:
-	vagrant cloud box create --no-private Yohnah/Docker || true
-	cd Packer; packer build -var "box-to-upload=$(shell cat $(MANIFESTFILE) | jq '.builds | .[].files | .[].name')" -var "docker_version=$(CURRENT_DOCKER_VERSION)" -var "debian_version=$(CURRENT_DEBIAN_VERSION)" -var "builtDateTime=$(DATETIME)" -var "provider=$(PROVIDER)" upload-box-to-vagrant-cloud.pkr.hcl
-	vagrant cloud version update -d "Built at $(DATETIME) - Debian version: $(CURRENT_DEBIAN_VERSION)" Yohnah/Docker $(CURRENT_DOCKER_VERSION)
-
-clean: clean_test
-	rm -fr $(OUTPUT_DIRECTORY)/packer-build || true
+clean: 
+	rm -fr $(PACKER_DIRECTORY_OUTPUT) || true

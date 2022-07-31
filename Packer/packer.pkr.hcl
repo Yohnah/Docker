@@ -54,7 +54,7 @@ source "virtualbox-iso" "docker" {
     }
     iso_checksum = local.iso_checksum
     iso_url = local.iso_url
-    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.docker_version}/virtualbox/"
+    output_directory = "${var.output_directory}/output/artifacts/${local.vm_name}/${var.docker_version}/virtualbox/"
     shutdown_command = local.shutdown_command
     ssh_password = "vagrant"
     ssh_port = 22
@@ -82,7 +82,7 @@ source "parallels-iso" "docker" {
     }
     iso_checksum = local.iso_checksum
     iso_url = local.iso_url
-    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.docker_version}/parallels/"
+    output_directory = "${var.output_directory}/output/artifacts/${local.vm_name}/${var.docker_version}/parallels/"
     shutdown_command = local.shutdown_command
     parallels_tools_flavor = "lin"
     ssh_password = "vagrant"
@@ -106,7 +106,7 @@ source "vmware-iso" "docker" {
     }
     iso_checksum = local.iso_checksum
     iso_url = local.iso_url
-    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.docker_version}/vmware/"
+    output_directory = "${var.output_directory}/output/artifacts/${local.vm_name}/${var.docker_version}/vmware/"
     shutdown_command = local.shutdown_command
     ssh_password = "vagrant"
     ssh_port = 22
@@ -134,7 +134,7 @@ source "hyperv-iso" "docker" {
     }
     iso_checksum = local.iso_checksum
     iso_url = local.iso_url
-    output_directory = "${var.output_directory}/packer-build/output/artifacts/${local.vm_name}/${var.docker_version}/hyperv/"
+    output_directory = "${var.output_directory}/output/artifacts/${local.vm_name}/${var.docker_version}/hyperv/"
     shutdown_command = local.shutdown_command
     ssh_password = "vagrant"
     ssh_port = 22
@@ -229,11 +229,11 @@ build {
     post-processors {
         post-processor "vagrant" {
           keep_input_artifact = false
-          output = "${var.output_directory}/packer-build/output/boxes/${local.vm_name}/${var.docker_version}/{{.Provider}}/{{.BuildName}}.box"
+          output = "${var.output_directory}/output/boxes/${local.vm_name}/${var.docker_version}/{{.Provider}}/{{.BuildName}}.box"
           vagrantfile_template = "${path.root}/vagrantfile.rb"
         }
         post-processor "manifest" {
-            output = "${var.output_directory}/packer-build/${var.docker_version}/manifest.json"
+            output = "${var.output_directory}/${var.docker_version}/manifest.json"
         }
     }
 
