@@ -17,7 +17,7 @@ jobs:
       version: ${{ steps.build.outputs.version }}
     steps:
       - name: Create list to pass into BuildDocker job
-        run: echo ::set-output name=version::[${{ inputs.Version }}]
+        run: echo ::set-output name=version::["${{ inputs.Version }}"]
 
 
   BuildDocker:
