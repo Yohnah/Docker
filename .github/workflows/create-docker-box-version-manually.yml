@@ -15,6 +15,6 @@ jobs:
     needs: GetVersions
     uses:  ./.github/workflows/Build-Box-reusable.yml
     with:
-      dockerVersions: ${{ inputs.Version }}
+      dockerVersions: [${{ inputs.Version }}]
 
 
