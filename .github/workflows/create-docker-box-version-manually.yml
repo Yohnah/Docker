@@ -1,0 +1,12 @@
+name: Create docker box version manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      Version:
+        required: true
+        type: string
+
+jobs:
+  GetVersions:
+    uses: ./.github/workflows/reusables/GetVersions.yml

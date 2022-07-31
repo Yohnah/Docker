@@ -1,0 +1,34 @@
+name: Get Versions
+
+on: 
+  workflow_call:  
+    outputs:
+      debianVersion:
+        description: "The debian version to build the box"
+        value: ${{ jobs.GetVersions.outputs.debianversion }}
+      dockerVersion: 
+        description: "The docker version to build the box"
+        value: ${{ jobs.GetVersions.outputs.dockerversion }}
+      dockerreleases:
+        description: "All docker released versions"
+        value: ${{ jobs.GetVersions.outputs.dockerreleases }}
+      currentboxversion:
+        descripton: "The current docker box version"
+        value: ${{ jobs.GetVersions.outputs.dockerreleases }}
+
+jobs:
+  GetVersions:
+    runs-on: ubuntu-20.04
+    outputs:
+      debianversion: ${{ steps.versions.outputs.debianversion }}
+      dockerversion: ${{ steps.versions.outputs.dockerversion }}
+      dockerreleases: ${{ steps.versions.outputs.alldockerreleases }}
+      currenetboxversion: ${{ steps.versions.outputs.boxversion }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Check if new docker veresion exist
+        id: versions
+        run: make versions
