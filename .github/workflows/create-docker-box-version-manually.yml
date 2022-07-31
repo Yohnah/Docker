@@ -14,6 +14,6 @@ jobs:
     needs: GetVersions
     uses:  ./.github/workflows/GetVersions-reusable.yml
     with:
-      dockerVersions: [${{ needs.GetVersions.dockerVersion }}]
+      dockerVersions: ${{ needs.GetVersions.dockerVersion }}
 
 
