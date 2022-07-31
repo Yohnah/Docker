@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        version: ${{ inputs.dockerVersions }}
+        version: [${{ inputs.dockerVersions }}]
         provider: [virtualbox,vmware,parallels]
     steps:
       - name: Check out repository code
