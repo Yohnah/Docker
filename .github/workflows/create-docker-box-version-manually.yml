@@ -9,4 +9,4 @@ on:
 
 jobs:
   GetVersions:
-    uses: ./.github/workflows/reusables/GetVersions.yml
+    uses: ./.github/workflows/GetVersions-reusable.yml
