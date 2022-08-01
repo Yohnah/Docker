@@ -12,12 +12,12 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        provider: [virtualbox,vmware-desktop,parallels]
+        provider: [virtualbox,vmware_desktop,parallels]
         version: ${{ fromJSON(inputs.dockerVersions) }}
         include:
           - provider: virtualbox
             runner: self-hosted-1
-          - provider: vmware-desktop
+          - provider: vmware_desktop
             runner: self-hosted-2
           - provider: parallels
             runner: self-hosted-3

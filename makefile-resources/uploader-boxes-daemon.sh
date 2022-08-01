@@ -2,6 +2,9 @@
 
 while true;
 do
+    echo "Waiting for more boxes to upload"
+    sleep 10
+    
     ls $UPLOADER_DIRECTORY/*.box 2> /dev/null | while read FILE;
     do
 
@@ -23,9 +26,6 @@ do
         echo "No more boxes to upload"
         break
     fi
-
-    echo "Waiting for more boxes to upload"
-    sleep 10
 
 done
 exit 0

@@ -43,5 +43,5 @@ jobs:
     uses: ./.github/workflows/Done-reusable.yml
 
   Clean:
-    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done]
+    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done, Uploader]
     uses: ./.github/workflows/Clean-reusable.yml
