@@ -13,7 +13,7 @@ jobs:
 
   Uploader:
     needs: GetVersions
-    uses: ./.github/workflows/uploader.reusable.yml
+    uses: ./.github/workflows/uploader-reusable.yml
 
   ConcatStrings:
     runs-on: self-hosted-1
