@@ -33,7 +33,8 @@ jobs:
 
 
   TestBox:
-    needs: [GetVersions, ConcatStrings, BuildDocker]
+    #needs: [GetVersions, ConcatStrings, BuildDocker]
+    needs: [GetVersions, ConcatStrings]
     uses: ./.github/workflows/Test-Docker-Box-reusable.yml
     with:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
