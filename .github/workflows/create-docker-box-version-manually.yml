@@ -16,7 +16,7 @@ jobs:
     uses: ./.github/workflows/uploader-reusable.yml
 
   ConcatStrings:
-    runs-on: self-hosted-1
+    runs-on: self-hosted-2
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
