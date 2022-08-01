@@ -1,0 +1,24 @@
+name: Test Docker box
+
+on: 
+  workflow_call:
+    inputs:
+      dockerVersions:
+        required: true
+        type: string
+
+jobs:
+  Build:
+    runs-on: self-hosted-1
+    strategy:
+      max-parallel: 1
+      matrix:
+        provider: [virtualbox,vmware,parallels]
+        version: ${{ fromJSON(inputs.dockerVersions) }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Build Docker box
+        run: make test CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}

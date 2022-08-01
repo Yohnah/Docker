@@ -28,3 +28,8 @@ jobs:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
 
 
+  TestBox:
+    needs: [GetVersions, ConcatStrings, BuildDocker]
+    uses: ./.github/workflows/BTest-Docker-Box-reusable.yml
+    with:
+      dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
