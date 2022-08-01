@@ -9,12 +9,20 @@ on:
 
 jobs:
   Build:
-    runs-on: self-hosted-1
     strategy:
       max-parallel: 1
       matrix:
-        provider: [virtualbox,vmware,parallels]
+        provider: [virtualbox,vmware-desktop,parallels]
         version: ${{ fromJSON(inputs.dockerVersions) }}
+        include:
+          - provider: virtualbox
+            runner: self-hosted-1
+          - provider: vmware-desktop
+            runner: self-hosted-2
+          - provider: parallels
+            runner: self-hosted-3
+
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
