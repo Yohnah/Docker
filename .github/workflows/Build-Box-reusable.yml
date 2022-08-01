@@ -10,7 +10,7 @@ on:
 jobs:
   Build:
     strategy:
-      max-parallel: 1
+      max-parallel: 3
       matrix:
         provider: [virtualbox,vmware,parallels]
         version: ${{ fromJSON(inputs.dockerVersions) }}

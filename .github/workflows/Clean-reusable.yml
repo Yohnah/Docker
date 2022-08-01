@@ -4,7 +4,7 @@ on:
 
 jobs:
   Clean:
-    runs-on: self-hosted-1
+    runs-on: self-hosted-4
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
