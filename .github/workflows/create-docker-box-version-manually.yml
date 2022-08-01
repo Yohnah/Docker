@@ -25,16 +25,15 @@ jobs:
         run: echo ::set-output name=version::$( echo ${{ inputs.Version }} | jq -ncR '[inputs]')
 
 
-#  BuildDocker:
-#    needs: [GetVersions, ConcatStrings]
-#    uses:  ./.github/workflows/Build-Box-reusable.yml
-#    with:
-#      dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
+  BuildDocker:
+    needs: [GetVersions, ConcatStrings]
+    uses:  ./.github/workflows/Build-Box-reusable.yml
+    with:
+      dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
 
 
   TestBox:
-    #needs: [GetVersions, ConcatStrings, BuildDocker]
-    needs: [GetVersions, ConcatStrings]
+    needs: [GetVersions, ConcatStrings, BuildDocker]
     uses: ./.github/workflows/Test-Docker-Box-reusable.yml
     with:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
