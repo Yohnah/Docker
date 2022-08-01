@@ -21,7 +21,7 @@ do
         rm -fr $FILE
     done
 
-    if [[ -f "/tmp/packer-build/toupload/done" && "$(ls /tmp/packer-build/toupload/*.box 2> /dev/null | wc -l)" -eq "0" ]];
+    if [[ -f "$UPLOADER_DIRECTORY/done" && "$(ls $UPLOADER_DIRECTORY/*.box 2> /dev/null | wc -l)" -eq "0" ]];
     then
         echo "No more boxes to upload"
         break
