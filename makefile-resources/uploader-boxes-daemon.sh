@@ -25,5 +25,3 @@ do
 
 done
 exit 0
-
-#[[ ! -f "/tmp/packer-build/toupload/done" && "$(ls $UPLOADER_DIRECTORY/*.box 2> /dev/null | wc -l)" != "0" ]]

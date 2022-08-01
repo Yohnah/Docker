@@ -1,0 +1,15 @@
+name: Uploader
+
+on: 
+  workflow_call: 
+
+jobs:
+  Uploader:
+    runs-on: self-hosted-1
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+      - name: Uploader running
+        run: make uploader

@@ -11,6 +11,10 @@ jobs:
   GetVersions:
     uses: ./.github/workflows/GetVersions-reusable.yml
 
+  Uploader:
+    needs: GetVersions
+    uses: ./.github/workflows/uploader.reusable.yml
+
   ConcatStrings:
     runs-on: self-hosted-1
     outputs:
@@ -33,3 +37,11 @@ jobs:
     uses: ./.github/workflows/Test-Docker-Box-reusable.yml
     with:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
+    
+  Done:
+    needs: [GetVersions, ConcatStrings, BuildDocker]
+    users: ./.github/workflows/Done-reusable.yml
+
+  Clean:
+    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done]
+    uses: ./.github/workflows/Clean-reusable.yml
