@@ -3,7 +3,7 @@ on:
   workflow_call: 
 
 jobs:
-  Uploader:
+  Clean:
     runs-on: self-hosted-1
     steps:
       - name: Check out repository code

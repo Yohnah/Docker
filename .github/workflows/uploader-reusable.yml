@@ -5,7 +5,7 @@ on:
 
 jobs:
   Uploader:
-    runs-on: self-hosted-1
+    runs-on: self-hosted-2
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
