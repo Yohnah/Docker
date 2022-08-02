@@ -12,7 +12,7 @@ on:
       dockerreleases:
         description: "All docker released versions"
         value: ${{ jobs.versions.outputs.dockerreleases }}
-      currentboxversion:
+      currentboxversions:
         description: "The current docker box version"
         value: ${{ jobs.versions.outputs.dockerreleases }}
 

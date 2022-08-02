@@ -14,10 +14,6 @@ jobs:
   GetVersions:
     uses: ./.github/workflows/GetVersions-reusable.yml
 
-  #Uploader:
-  #  needs: GetVersions
-  #  uses: ./.github/workflows/uploader-reusable.yml
-
   ConcatStrings:
     runs-on: self-hosted-2
     outputs:
