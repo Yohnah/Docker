@@ -31,17 +31,6 @@ jobs:
     with:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
 
-
-  TestBox:
-    needs: [GetVersions, ConcatStrings, BuildDocker]
-    uses: ./.github/workflows/Test-Docker-Box-reusable.yml
-    with:
-      dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
-    
-#  Done:
-#    needs: [GetVersions, ConcatStrings, BuildDocker]
-#    uses: ./.github/workflows/Done-reusable.yml
-
 #  Clean:
 #    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done, Uploader]
 #    uses: ./.github/workflows/Clean-reusable.yml

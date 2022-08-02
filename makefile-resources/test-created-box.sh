@@ -16,7 +16,7 @@ cd $PACKER_DIRECTORY_OUTPUT/test/$CURRENT_DOCKER_VERSION/$PROVIDER
 vagrant init 'testing-docker-box-'$CURRENT_DOCKER_VERSION
 vagrant up --provider $PROVIDER
 vagrant provision
-DOCKER_HOST="tcp://$(vagrant ssh-config | grep -i "HostName" | awk '{ print $2 }'):$(vagrant port --guest 2375)/" $HOME/.Yohnah/Docker/docker run hello-world;
+#DOCKER_HOST="tcp://$(vagrant ssh-config | grep -i "HostName" | awk '{ print $2 }'):$(vagrant port --guest 2375)/" $HOME/.Yohnah/Docker/docker run hello-world;
 vagrant destroy -f
 
 rm -fr $PACKER_DIRECTORY_OUTPUT/test/$CURRENT_DOCKER_VERSION/$PROVIDER/*
