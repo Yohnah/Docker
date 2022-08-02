@@ -36,5 +36,5 @@ jobs:
     secrets: inherit
 
   Clean:
-    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done, Uploader]
+    needs: [GetVersions, ConcatStrings, BuildAndUploadDocker, Uploader]
     uses: ./.github/workflows/Clean-reusable.yml
