@@ -35,6 +35,6 @@ jobs:
         run: make build CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
       - name: Upload Docker box
         run: make upload CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
-      - name: Upload Docker box
+      - name: Remove Docker box
         run: make remove_box CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
 
