@@ -45,9 +45,6 @@ test: requirements
 	sh ./makefile-resources/test-created-box.sh
 	
 
-done:
-	touch $(PACKER_DIRECTORY_OUTPUT)/toupload/done
-
 upload:
 	sh ./makefile-resources/upload-docker-box.sh
 
