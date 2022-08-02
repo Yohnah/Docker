@@ -1,2 +1,2 @@
       Built at ${DATETIME}
-      Debian version: ${DEBIAN_VERSION}
+      Debian version: ${CURRENT_DEBIAN_VERSION}

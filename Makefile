@@ -48,9 +48,11 @@ test: requirements
 done:
 	touch $(PACKER_DIRECTORY_OUTPUT)/toupload/done
 
-uploader:
-	sh ./makefile-resources/uploader-boxes-daemon.sh
+upload:
+	sh ./makefile-resources/upload-docker-box.sh
 
+remove_box:
+	sh ./makefile-resources/remove-box.sh
 
 clean: 
 	rm -fr $(PACKER_DIRECTORY_OUTPUT) || true
