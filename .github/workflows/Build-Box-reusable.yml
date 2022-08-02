@@ -32,3 +32,4 @@ jobs:
         run: make build CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
       - name: Test Docker box
         run: make test CURRENT_DOCKER_VERSION=${{ matrix.version }} PROVIDER=${{ matrix.provider }}
+

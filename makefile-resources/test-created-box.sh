@@ -2,7 +2,7 @@
 
 if [[ "$PROVIDER" == *"vmware"* ]];
 then
-    export HyperVisor = "vmware"
+    export HyperVisor = "vmware_desktop"
 else
     export HyperVisor = $PROVIDER
 fi
@@ -21,9 +21,3 @@ vagrant destroy -f
 
 rm -fr $PACKER_DIRECTORY_OUTPUT/test/$CURRENT_DOCKER_VERSION/$PROVIDER/*
 vagrant box remove "testing-docker-box-$CURRENT_DOCKER_VERSION" --provider $PROVIDER
-
-if [[ "$?" -eq 0 ]];
-then
-    echo "Everythings was ok... moving to upload the box"
-    mv $BOXFILE $UPLOADER_DIRECTORY/docker-$CURRENT_DOCKER_VERSION-$HyperVisor-$CURRENT_DEBIAN_VERSION.box
-fi
