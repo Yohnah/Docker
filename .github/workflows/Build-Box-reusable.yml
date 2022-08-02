@@ -6,6 +6,10 @@ on:
       dockerVersions:
         required: true
         type: string
+    secrets:
+      VAGRANT_CLOUD_TOKEN:
+        required: true
+
 
 env:
   VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}

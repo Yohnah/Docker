@@ -7,6 +7,9 @@ on:
         required: true
         type: string
 
+env:
+  VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
+
 jobs:
   GetVersions:
     uses: ./.github/workflows/GetVersions-reusable.yml
@@ -25,12 +28,13 @@ jobs:
         run: echo ::set-output name=version::$( echo ${{ inputs.Version }} | jq -ncR '[inputs]')
 
 
-  BuildDocker:
+  BuildAndUploadDocker:
     needs: [GetVersions, ConcatStrings]
     uses:  ./.github/workflows/Build-Box-reusable.yml
     with:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
+    secrets: inherit
 
-#  Clean:
-#    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done, Uploader]
-#    uses: ./.github/workflows/Clean-reusable.yml
+  Clean:
+    needs: [GetVersions, ConcatStrings, BuildDocker, TestBox, Done, Uploader]
+    uses: ./.github/workflows/Clean-reusable.yml
