@@ -15,6 +15,7 @@ echo "Box $BOXFILE found, uploading..."
 vagrant cloud version update -d "$(cat ./makefile-resources/uploading-box-notification-template.md | envsubst)" Yohnah/Docker $CURRENT_DOCKER_VERSION
 vagrant cloud provider delete -f Yohnah/Docker $HyperVisor $CURRENT_DOCKER_VERSION || true
 SHASUM=$(shasum $BOXFILE | awk '{ print $1 }')
-vagrant cloud provider create --timestamp --checksum-type sha1 --checksum $SHASUM Yohnah/Docker $HyperVisor $CURRENT_DOCKER_VERSION $BOXFILE
+vagrant cloud provider create --timestamp --checksum-type sha1 --checksum $SHASUM Yohnah/Docker $HyperVisor $CURRENT_DOCKER_VERSION
+vagrant cloud provider upload Yohnah/Docker $HyperVisor $CURRENT_DOCKER_VERSION $BOXFILE
 vagrant cloud version update -d "$(cat ./makefile-resources/box-version-description-template.md | envsubst)" Yohnah/Docker $CURRENT_DOCKER_VERSION
 echo "Box $BOXFILE uploaded"
