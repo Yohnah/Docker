@@ -13,6 +13,7 @@ BOXFILE=$(cat /tmp/packer-build/$CURRENT_DOCKER_VERSION/manifest.json | jq '.bui
 
 echo "Box $BOXFILE found, uploading..." 
 vagrant cloud version update -d "$(cat ./makefile-resources/uploading-box-notification-template.md | envsubst)" Yohnah/Docker $CURRENT_DOCKER_VERSION
+vagrant cloud provider create Yohnah/Docker $HyperVisor $CURRENT_DOCKER_VERSION || true
 vagrant cloud provider upload Yohnah/Docker $HyperVisor $CURRENT_DOCKER_VERSION $BOXFILE
 vagrant cloud version update -d "$(cat ./makefile-resources/box-version-description-template.md | envsubst)" Yohnah/Docker $CURRENT_DOCKER_VERSION
 echo "Box $BOXFILE uploaded"
