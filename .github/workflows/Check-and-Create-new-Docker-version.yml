@@ -17,13 +17,14 @@ jobs:
     uses: ./.github/workflows/GetVersions-reusable.yml
 
   ConcatStrings:
+    needs: [GetVersions]
     runs-on: self-hosted-2
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - name: Create list to pass into BuildDocker job
         id: version
-        run: echo ::set-output name=version::$( echo ${{ inputs.Version }} | jq -ncR '[inputs]')
+        run: echo ::set-output name=version::$( echo ${{ needs.GetVersions.outputs.dockerVersion }} | jq -ncR '[inputs]')
 
 
   BuildAndUploadDocker:
