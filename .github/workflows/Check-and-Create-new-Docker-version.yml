@@ -1,8 +1,9 @@
-name: Create docker box version manually
+name: Create docker box version automaticaly
 
 on:
   workflow_dispatch:
-  
+  schedule:
+    - cron: '* 3 * * *'
 env:
   VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
 
