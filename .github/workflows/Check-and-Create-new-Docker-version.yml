@@ -2,6 +2,7 @@ name: Create docker box version manually
 
 on:
   workflow_dispatch:
+  
   schedule:
     - cron: '* 3 * * *'
 env:
