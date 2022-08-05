@@ -2,18 +2,20 @@ name: Create docker box version manually
 
 on:
   workflow_dispatch:
-    inputs:
-      Version:
-        required: true
-        type: string
-
+  schedule:
+    - cron: '* 3 * * *'
 env:
   VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
 
 jobs:
+  CheckIfBuild:
+    uses: ./.github/workflows/CheckIfBuild-reusable.yml
+
   GetVersions:
+    needs: [CheckIfBuild]
+    if: needs.CheckIfBuild.outputs.Verdict
     uses: ./.github/workflows/GetVersions-reusable.yml
-    
+
   ConcatStrings:
     runs-on: self-hosted-2
     outputs:
