@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/CheckIfBuild-reusable.yml
 
   GetVersions:
-    needs: [CheckIfBuild]
+    needs: [CheckIfBuild] 
     if: needs.CheckIfBuild.outputs.Verdict
     uses: ./.github/workflows/GetVersions-reusable.yml
 
@@ -28,7 +28,7 @@ jobs:
 
 
   BuildAndUploadDocker:
-    needs: [GetVersions, ConcatStrings]
+    needs: [ConcatStrings]
     uses:  ./.github/workflows/Build-Box-reusable.yml
     with:
       dockerVersions: ${{ needs.ConcatStrings.outputs.version }}
