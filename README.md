@@ -2,14 +2,14 @@
 
 Welcome to this modest project, a Docker Desktop alternative on Vagrant by Hashicorp
 
-Just run ***vagrant up*** command and get a worked Docker Desktop alterative
+Just run ***vagrant up*** command and get a worked Docker Desktop alternative
 
 Debian GNU/Linux is used as OS based system for compatibily reasons among the listed [hypervisors](#hypervisor) below
 ___
 ***Note:***
 Vagrant Cloud repository: [https://app.vagrantup.com/Yohnah/boxes/Docker](https://app.vagrantup.com/Yohnah/boxes/Docker)
 
-Due to some limitations the Vagrant Cloud repository has only boxes for Virtualbox provider. If you need to get a version for one of compatible [hypervisors](#hypervisor), please see the "[Building from sources](#building-from-sources)" section for more information
+Vagrant Cloud repository support the following providers: VirtualBox, VMWare and Parallels. If you need to get a version for other of compatible [hypervisors](#hypervisor), please see the "[Building from sources](#building-from-sources)" section for more information
 ___
 
 - [Begin](#begin)
