@@ -18,4 +18,4 @@ jobs:
           ref: ${{ github.ref }}
       - name: Get version list
         id: versions
-        run: make versions
+        run: make checkifbuild
