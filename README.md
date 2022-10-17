@@ -69,7 +69,7 @@ If you get an issue or problem running Yohnah/Docker, please, kindly open a new 
 Run on Unix-Like and MacOs:
 
 ~~~
-$ vagrant init Yohnah/Docker #or vagrant init --box-version '<docker version>' Yohnah/Docker
+$ vagrant init Yohnah/Docker 
 $ vagrant up #or vagrant up --provider <hypervisor>
 $ docker --help
 ~~~
@@ -77,7 +77,7 @@ $ docker --help
 On Windows PowerShell:
 
 ~~~
-PS C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker #or vagrant.exe init --box-version '<docker version>' Yohnah/Docker
+PS C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
 PS C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 PS C:\Users\JohnDoe> docker.exe --help
 ~~~
@@ -85,28 +85,11 @@ PS C:\Users\JohnDoe> docker.exe --help
 On Windows CMD:
 
 ~~~
-C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker #or vagrant.exe init --box-version '<docker version>' Yohnah/Docker
+C:\Users\JohnDoe> vagrant.exe init Yohnah/Docker
 C:\Users\JohnDoe> vagrant.exe up #or vagrant up --provider <hypervisor>
 C:\Users\JohnDoe> docker.exe --help
 ~~~
 
-Where "\<docker version\>" is the specific version of docker you want to use according docker releases notes <https://docs.docker.com/release-notes/>
-
-Resulting a configured and worked docker service and installed client binaries on host device to be used just like Docker Desktop does
-
-___
-***Note:***
-See Docker docs for futher information about Docker client binaries: https://docs.docker.com/engine/install/binaries/
-___
-
-***LOOK OUT!!!***
-Sometimes docker clients binaries are not installed for any reason, when vagrant up command is run, vagrant does not fire the trigger to install the binaries, essentially when the boxes have to be downloaded a first time
-
-If that happens, just run the provision command to force the docker client binaries installation:
-
-~~~
-$ vagrant provision
-~~~
 ___
 
 ## Long prompts
@@ -146,66 +129,16 @@ ___
 For further information about how Vagrant works, please visit https://www.vagrantup.com/docs
 ___
 
-However, the Yohnah/Docker box include artifacts to install the docker client binaries into your host considering host OS, be it Windows, Mac or Linux
-
-After vagrant up is run, the box will trigger local actions onto the host to install and setup the docker client binaries, such as:
-
-1. Setup the PATH environment variable
-2. Copy all docker client binaries (same version as docker daemon installed into virtual machine) into your host machine
-3. Setup the DOCKER_HOST environment variable
-___
-***Note:***
-If a ***vagrant destroy*** command is run, the box will also trigger a reset to revert the actions listed above.
-___
-
-So, just run a ***vagrant up*** command in a Yohnah/Docker vagrant workspace and just run the docker client directly in your favourite terminal (reload your terminal to refresh environment variables before running docker client)
-___
-***LOOK OUT!!!***
-Sometimes docker clients binaries are not installed for any reason, when vagrant up command is run, vagrant does not fire the trigger to install the binaries, essentially when the boxes have to be downloaded a first time
-
-If that happens, just run the provision command to force the docker client binaries installation:
-
-~~~
-$ vagrant provision
-~~~
-___
-
-The vagrant boxes versions match with Docker versions according to releases notes of Docker <https://docs.docker.com/release-notes/>
-
-Once a new Docker version is published from Docker team, a new Yohnah/Docker version will be also published at Vagrant Cloud repository in the following 24 hours using the same semantic versioning as used for the released docker version. Thus, if you need to use a specific Docker version, you can initialize the vagrant directory for setting the box version that you want:
-
-Ex:
-If you need the docker version 20.10.13, just run:
-~~~
-$ vagrant init --box-version '20.10.13' Yohnah/Docker
-~~~
-
-and following the rest of vagrant commands explained above
-
 
 # Alternative use of docker on Yohnah/Docker box
 
-As alternative, docker can be used by ssh the box as follows, after the vagrant up was run:
+Check out the "vagrant --help" to see the specific commands after vagrant up
 
 ~~~
-$ vagrant ssh #in the vagrant folder workspace
+$ vagrant --help
+$ vagrant install-docker-client
+$ vagrant docker -- run hello-world
 ~~~
-
-In this manner, the docker client binaries is not neccessary to use
-
-___
-***Note:*** Set the INSTALL_DOCKER_CLIENT="NO" environment variable before running the ***vagrant up*** command to avoid installing the docker client binaries onto host device. 
-___
-
-# Port forwarding access
-
-A private host only nic interface is created to work with the running box. To get the IP address run within vagrant directory:
-
-~~~
-$ vagrant ssh -- get-ip.sh
-~~~
-
-And use that IP to interact with docker services running within the running box
 
 # Keep in mind
 
